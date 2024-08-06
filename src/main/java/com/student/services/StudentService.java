@@ -7,11 +7,11 @@ import com.student.model.Student;
 
 public interface StudentService {
 	
-    List<Student> fetchAllStudents();
+    List<Student> readAllStudents();
 	
 	Student findStudentById(long id);
 	
-	Student insertNewStudentDetails(Student student);
+	Student createNewStudentDetails(Student student);
 	
     Student updateStudentInformation(long id, Student replacement);
 	

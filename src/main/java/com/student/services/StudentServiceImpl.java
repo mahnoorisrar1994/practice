@@ -1,51 +1,48 @@
 package com.student.services;
 
 import java.util.List;
-
+import java.util.NoSuchElementException;
 
 import org.springframework.stereotype.Service;
 
 import com.student.model.Student;
 import com.student.repositories.StudentRepository;
 
-
 @Service
 public class StudentServiceImpl implements StudentService {
-	
+
 	private StudentRepository studentRepository;
 
 	public StudentServiceImpl(StudentRepository studentRepository) {
 		this.studentRepository = studentRepository;
 	}
 
-
-	@Override
-	public List<Student> fetchAllStudents() {
+	public List<Student> readAllStudents() {
 		return this.studentRepository.findAll();
 	}
 
-	@Override
 	public Student findStudentById(long id) {
-		// TODO Auto-generated method stub
-		return null;
+		return studentRepository.findById(id).orElse(null);
 	}
 
-	@Override
-	public Student insertNewStudentDetails(Student student) {
-		// TODO Auto-generated method stub
-		return null;
+	public Student createNewStudentDetails(Student student) {
+		student.setId(null);
+		return studentRepository.save(student);
 	}
 
-	@Override
 	public Student updateStudentInformation(long id, Student replacement) {
-		// TODO Auto-generated method stub
-		return null;
+		replacement.setId(id);
+		return studentRepository.save(replacement);
 	}
 
-	@Override
+	
 	public void deleteStudentById(Long studentId) {
-		// TODO Auto-generated method stub
-		
+		// Check if the student details available 
+		Student existingStudent = studentRepository.findById(studentId)
+				.orElseThrow(() -> new NoSuchElementException("Student does not exist"));
+
+		studentRepository.delete(existingStudent);
+
 	}
 
 }
