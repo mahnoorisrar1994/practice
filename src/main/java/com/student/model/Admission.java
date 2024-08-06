@@ -1,5 +1,6 @@
 package com.student.model;
 
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.Objects;
 
@@ -14,10 +15,10 @@ public class Admission {
 	    @Id
         @GeneratedValue(strategy = GenerationType.IDENTITY)
 		private Long id;
-		private Date admissionDate;
+		private LocalDate admissionDate;
 	    private String status;
 	    
-		public Admission(Long id, Date admissionDate, String status) {
+		public Admission(Long id, LocalDate admissionDate, String status) {
 			super();
 			this.id = id;
 			this.admissionDate = admissionDate;
@@ -32,11 +33,12 @@ public class Admission {
 			this.id = id;
 		}
 
-		public Date getAdmissionDate() {
+
+		public LocalDate getAdmissionDate() {
 			return admissionDate;
 		}
 
-		public void setAdmissionDate(Date admissionDate) {
+		public void setAdmissionDate(LocalDate admissionDate) {
 			this.admissionDate = admissionDate;
 		}
 
@@ -65,6 +67,8 @@ public class Admission {
 			return Objects.equals(admissionDate, other.admissionDate) && Objects.equals(id, other.id)
 					&& Objects.equals(status, other.status);
 		}
+
+		
 		
 	
 

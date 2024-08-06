@@ -60,7 +60,7 @@ class StudentServiceTest {
 	}
 
 	@Test
-	void test_createNewStudentDetails() {
+	void test_createNewStudent_Details() {
 		Student toSave = spy(new Student(99L, "", "", ""));
 		Student saved = new Student(1L, "Hamza", "Khan", "Hamzakhan@gmail.com");
 
@@ -76,7 +76,7 @@ class StudentServiceTest {
 	}
 
 	@Test
-	void test_updateStudentInformation() {
+	void test_updateStudent_Information() {
 		Student replacement = spy(new Student(null, "Hamza", "Khan", "Hamza@gmail.com"));
 		Student replaced = new Student(1L, "Hamza", "Khan", "Hamzakhan@gmail.com");
 
