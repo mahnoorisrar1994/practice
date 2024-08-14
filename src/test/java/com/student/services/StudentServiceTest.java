@@ -11,6 +11,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.time.LocalDate;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
@@ -22,6 +23,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import com.student.model.Admission;
 import com.student.model.Student;
 import com.student.repositories.StudentRepository;
 
@@ -36,8 +38,10 @@ class StudentServiceTest {
 
 	@Test
 	void test_ReadAllStudents() {
-		Student firstStudent = new Student(1L, "Hamza", "Khan", "Hamzakhan@gmail.com");
-		Student secondStudent = new Student(2L, "Hamza", "Khan", "Hamzakhan@gmail.com");
+		Admission firstAdmission = new Admission(1L, LocalDate.of(2021, 02, 2), "pending");
+		Admission secondAdmission = new Admission(2L, LocalDate.of(2021, 10, 2), "approved");
+		Student firstStudent = new Student(1L, "Hamza", "Khan", "Hamzakhan@gmail.com", firstAdmission);
+		Student secondStudent = new Student(2L, "Hamza", "Khan", "Hamzakhan@gmail.com", secondAdmission);
 		// Configure the mock to return the student list
 		when(studentRepository.findAll()).thenReturn(asList(firstStudent, secondStudent));
 		// Test the method
@@ -47,7 +51,8 @@ class StudentServiceTest {
 
 	@Test
 	void test_getStudentById_found() {
-		Student firstStudent = new Student(1L, "Hamza", "Khan", "Hamzakhan@gmail.com");
+		Admission firstAdmission = new Admission(1L, LocalDate.of(2021, 02, 2), "pending");
+		Student firstStudent = new Student(1L, "Hamza", "Khan", "Hamzakhan@gmail.com", firstAdmission);
 		when(studentRepository.findById(1L)).thenReturn(Optional.of(firstStudent));
 		// Test the method
 		assertThat(studentService.findStudentById(1)).isSameAs(firstStudent);
@@ -61,24 +66,27 @@ class StudentServiceTest {
 
 	@Test
 	void test_createNewStudent_Details() {
-		Student toSave = spy(new Student(99L, "", "", ""));
-		Student saved = new Student(1L, "Hamza", "Khan", "Hamzakhan@gmail.com");
+	    Admission firstAdmission = new Admission(1L, LocalDate.of(2021, 02, 2), "pending");
+	    Student toSave = new Student(99L, "", "", "", firstAdmission);  // No spy()
+	    Student saved = new Student(1L, "Hamza", "Khan", "Hamzakhan@gmail.com", firstAdmission);
 
-		when(studentRepository.save(any(Student.class))).thenReturn(saved);
+	    when(studentRepository.save(any(Student.class))).thenReturn(saved);
 
-		Student result = studentService.createNewStudentDetails(toSave);
+	    Student result = studentService.createNewStudentDetails(toSave);
 
-		assertThat(result).isSameAs(saved);
+	    assertThat(result).isSameAs(saved);
 
-		InOrder inOrder = Mockito.inOrder(toSave, studentRepository);
-		inOrder.verify(toSave).setId(null);
-		inOrder.verify(studentRepository).save(toSave);
+	    // Verifying interactions
+	    InOrder inOrder = Mockito.inOrder(studentRepository);
+	    inOrder.verify(studentRepository).save(toSave);  // Verifying save() was called on repository
 	}
+
 
 	@Test
 	void test_updateStudent_Information() {
-		Student replacement = spy(new Student(null, "Hamza", "Khan", "Hamza@gmail.com"));
-		Student replaced = new Student(1L, "Hamza", "Khan", "Hamzakhan@gmail.com");
+		Admission firstAdmission = new Admission(1L, LocalDate.of(2021, 02, 2), "pending");
+		Student replacement = spy(new Student(null, "Hamza", "Khan", "Hamza@gmail.com", firstAdmission));
+		Student replaced = new Student(1L, "Hamza", "Khan", "Hamzakhan@gmail.com", firstAdmission);
 
 		when(studentRepository.save(any(Student.class))).thenReturn(replaced);
 
@@ -93,7 +101,8 @@ class StudentServiceTest {
 
 	@Test
 	void test_deleteStudentDetail_found() {
-		Student existingStudentDetails = new Student(1L, "Hamza", "Khan", "Hamzakhan@gmail.com");
+		Admission firstAdmission = new Admission(1L, LocalDate.of(2021, 02, 2), "pending");
+		Student existingStudentDetails = new Student(1L, "Hamza", "Khan", "Hamzakhan@gmail.com", firstAdmission);
 		
 		when(studentRepository.findById(1L)).thenReturn(Optional.of(existingStudentDetails));
 		

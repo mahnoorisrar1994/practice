@@ -1,13 +1,14 @@
 package com.student.model;
 
 import java.time.LocalDate;
-import java.util.Date;
 import java.util.Objects;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
 
 @Entity
 public class Admission {
@@ -18,12 +19,20 @@ public class Admission {
 		private LocalDate admissionDate;
 	    private String status;
 	    
-		public Admission(Long id, LocalDate admissionDate, String status) {
+	   
+	    
+		
+		 public Admission(Long id, LocalDate admissionDate, String status) {
 			super();
 			this.id = id;
 			this.admissionDate = admissionDate;
 			this.status = status;
+			
 		}
+
+		public Admission() {
+		        // Default constructor
+		    }
 
 		public Long getId() {
 			return id;
@@ -67,6 +76,12 @@ public class Admission {
 			return Objects.equals(admissionDate, other.admissionDate) && Objects.equals(id, other.id)
 					&& Objects.equals(status, other.status);
 		}
+
+		
+
+
+
+	
 
 		
 		

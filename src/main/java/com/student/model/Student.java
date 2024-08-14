@@ -2,10 +2,12 @@ package com.student.model;
 
 import java.util.Objects;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToOne;
 
 @Entity
 public class Student {
@@ -17,12 +19,29 @@ public class Student {
 	    private String lastName;
 	    private String email;
 	    
-		public Student(Long id, String firstName, String lastName, String email) {
+	    @OneToOne(mappedBy = "student", cascade = CascadeType.ALL)
+	    private Admission admission;
+	    
+
+		public Student(Long id, String firstName, String lastName, String email, Admission admission) {
 			super();
 			this.id = id;
 			this.firstName = firstName;
 			this.lastName = lastName;
 			this.email = email;
+			this.admission = admission;
+		}
+		
+		public Student() {
+	        // Default constructor
+	    }
+
+		public Admission getAdmission() {
+			return admission;
+		}
+
+		public void setAdmission(Admission admission) {
+			this.admission = admission;
 		}
 
 		public Long getId() {
@@ -59,7 +78,7 @@ public class Student {
 
 		@Override
 		public int hashCode() {
-			return Objects.hash(email, firstName, id, lastName);
+			return Objects.hash(admission, email, firstName, id, lastName);
 		}
 
 		@Override
@@ -71,9 +90,12 @@ public class Student {
 			if (getClass() != obj.getClass())
 				return false;
 			Student other = (Student) obj;
-			return Objects.equals(email, other.email) && Objects.equals(firstName, other.firstName)
-					&& Objects.equals(id, other.id) && Objects.equals(lastName, other.lastName);
+			return Objects.equals(admission, other.admission) && Objects.equals(email, other.email)
+					&& Objects.equals(firstName, other.firstName) && Objects.equals(id, other.id)
+					&& Objects.equals(lastName, other.lastName);
 		}
+
+		
 		
 		
 	    

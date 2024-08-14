@@ -14,6 +14,6 @@ public interface AdmissionService {
 
 	Admission updateAdmissionInformation(long id, Admission replacement);
 
-	void deleteAdmissionById(Long studentId);
+	void deleteAdmissionById(Long admissionId);
 
 }
