@@ -7,7 +7,6 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 
 @Entity
@@ -19,7 +18,8 @@ public class Admission {
 		private LocalDate admissionDate;
 	    private String status;
 	    
-	   
+	    @OneToOne(mappedBy = "admission")
+	    private Student student;
 	    
 		
 		 public Admission(Long id, LocalDate admissionDate, String status) {
@@ -58,6 +58,14 @@ public class Admission {
 		public void setStatus(String status) {
 			this.status = status;
 		}
+		
+		public Student getStudent() {
+	        return student;
+	    }
+
+	    public void setStudent(Student student) {
+	        this.student = student;
+	    }
 
 		@Override
 		public int hashCode() {

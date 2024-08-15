@@ -33,6 +33,7 @@ public class Student {
 			this.lastName = lastName;
 			this.email = email;
 			this.admission = admission;
+			
 		}
 		
 		public Student() {
@@ -45,6 +46,7 @@ public class Student {
 
 		public void setAdmission(Admission admission) {
 			this.admission = admission;
+		
 		}
 
 		public Long getId() {
