@@ -1,6 +1,7 @@
 package com.student.services;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 import org.springframework.stereotype.Service;
 
@@ -26,21 +27,24 @@ public class AdmissionServiceImpl implements AdmissionService {
 		return admissionRepository.findById(id).orElse(null);
 	}
 
-	@Override
+
 	public Admission createNewAdmissionDetails(Admission admission) {
-		// TODO Auto-generated method stub
-		return null;
+		admission.setId(null);
+		return admissionRepository.save(admission);
 	}
 
-	@Override
+
 	public Admission updateAdmissionInformation(long id, Admission replacement) {
-		// TODO Auto-generated method stub
-		return null;
+		replacement.setId(id);
+		return admissionRepository.save(replacement);
 	}
 
-	@Override
-	public void deleteAdmissionById(Long studentId) {
-		// TODO Auto-generated method stub
+	public void deleteAdmissionById(Long admissionId) {
+		// Check if the student details available 
+		Admission existingAdmission = admissionRepository.findById(admissionId)
+				.orElseThrow(() -> new NoSuchElementException("Admission does not exist"));
+
+		admissionRepository.delete(existingAdmission);
 		
 	}
 
