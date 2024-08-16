@@ -53,7 +53,7 @@ class StudentRestControllerTest {
 
 	@Test
 	void testAllStudentsEmpty() throws Exception {
-		this.mvc.perform(get("/api/allStudents").accept(MediaType.APPLICATION_JSON)).andExpect(status().isOk())
+		this.mvc.perform(get("/api/students/allStudents").accept(MediaType.APPLICATION_JSON)).andExpect(status().isOk())
 				.andExpect(content().json("[]"));
 		// the above checks that the content is an empty JSON list
 	}
