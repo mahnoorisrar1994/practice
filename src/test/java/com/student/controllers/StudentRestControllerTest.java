@@ -52,20 +52,20 @@ class StudentRestControllerTest {
 	}
 
 	@Test
-	void testAllStudentsEmpty() throws Exception {
+	void test_AllStudentsEmpty() throws Exception {
 		this.mvc.perform(get("/api/students/allStudents").accept(MediaType.APPLICATION_JSON)).andExpect(status().isOk())
 				.andExpect(content().json("[]"));
 		// the above checks that the content is an empty JSON list
 	}
 
 	@Test
-	void testAllStudentsNotEmpty() throws Exception {
+	void test_AllStudentsNotEmpty() throws Exception {
 		Admission firstAdmission = new Admission(1L, LocalDate.of(2021, 02, 2), "pending");
 		Admission secondAdmission = new Admission(2L, LocalDate.of(2021, 10, 2), "approved");
 		when(studentService.readAllStudents())
 				.thenReturn(asList(new Student(1L, "Hamza", "Khan", "Hamzakhan@gmail.com", firstAdmission),
 						new Student(2L, "Hamza", "Khan", "Hamzakhan@gmail.com", secondAdmission)));
-		this.mvc.perform(get("/api/allStudents").accept(MediaType.APPLICATION_JSON)).andExpect(status().isOk())
+		this.mvc.perform(get("/api/students/allStudents").accept(MediaType.APPLICATION_JSON)).andExpect(status().isOk())
 				.andExpect(jsonPath("$[0].id", is(1))).andExpect(jsonPath("$[0].firstName", is("Hamza")))
 				.andExpect(jsonPath("$[0].lastName", is("Khan")))
 				.andExpect(jsonPath("$[0].email", is("Hamzakhan@gmail.com"))).andExpect(jsonPath("$[1].id", is(2)))
