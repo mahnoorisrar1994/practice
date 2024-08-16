@@ -15,10 +15,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import java.time.LocalDate;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -29,8 +27,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import com.student.model.Admission;
 import com.student.model.Student;
 import com.student.services.StudentService;
-
-import io.restassured.module.mockmvc.RestAssuredMockMvc;
 
 import static java.util.Arrays.asList;
 
@@ -43,13 +39,6 @@ class StudentRestControllerTest {
 
 	@MockBean
 	private StudentService studentService;
-
-	@BeforeEach
-	public void setUp() {
-		// Initialize the MockMvc instance for RestAssuredMockMvc
-		RestAssuredMockMvc.mockMvc(mvc);
-		MockitoAnnotations.openMocks(this);
-	}
 
 	@Test
 	void test_AllStudentsEmpty() throws Exception {
