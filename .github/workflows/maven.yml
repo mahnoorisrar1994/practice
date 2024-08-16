@@ -46,13 +46,17 @@ jobs:
       run: mvn verify -Pjacoco
     - name: Coveralls Report
       run: >
-         mvn coveralls:report
-         -DrepoToken=$COVERALLS_REPO_TOKEN
-         -DpullRequest=${{ github.event.pull_request.number }}
+        mvn coveralls:report
+        -DrepoToken=$COVERALLS_REPO_TOKEN
+        -DpullRequest=${{ github.event.pull_request.number }}
       env: 
-         COVERALLS_REPO_TOKEN: ${{ secrets.COVERALLS_TOKEN }}
-    - name: Build and analyze
+        COVERALLS_REPO_TOKEN: ${{ secrets.COVERALLS_REPO_TOKEN }}
+    - name: SonarCloud
+      run: >
+       mvn sonar:sonar
+       -Dsonar.organization=hamza1669
+       -Dsonar.host.url=https://sonarcloud.io
+       -Dsonar.projectKey=Hamza1669_Student_Admission_TDD
       env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-      run: mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=Hamza1669_Student_Admission_TDD
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} 
+        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
