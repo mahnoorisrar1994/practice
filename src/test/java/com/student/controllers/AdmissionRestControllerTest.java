@@ -26,23 +26,22 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 import com.student.model.Admission;
-import com.student.model.Student;
 import com.student.services.AdmissionService;
 
 @ExtendWith(MockitoExtension.class)
 @WebMvcTest(controllers = AdmissionRestController.class)
 class AdmissionRestControllerTest {
-	
+
 	@Autowired
 	private MockMvc mvc;
 
 	@MockBean
 	private AdmissionService admissionService;
-	
+
 	@Test
 	void test_AllAdmissionsEmpty() throws Exception {
-		this.mvc.perform(get("/api/admissions/allAdmissions").accept(MediaType.APPLICATION_JSON)).andExpect(status().isOk())
-				.andExpect(content().json("[]"));
+		this.mvc.perform(get("/api/admissions/allAdmissions").accept(MediaType.APPLICATION_JSON))
+				.andExpect(status().isOk()).andExpect(content().json("[]"));
 		// the above checks that the content is an empty JSON list
 	}
 
@@ -50,14 +49,15 @@ class AdmissionRestControllerTest {
 	void test_AllAdmissionsNotEmpty() throws Exception {
 		when(admissionService.readAllExistingAdmissions())
 				.thenReturn(asList(new Admission(1L, LocalDate.of(2021, 02, 2), "pending"),
-						new Admission (2L, LocalDate.of(2021, 10, 2), "approved")));
-		this.mvc.perform(get("/api/admissions/allAdmissions").accept(MediaType.APPLICATION_JSON)).andExpect(status().isOk())
-				.andExpect(jsonPath("$[0].id", is(1))).andExpect(jsonPath("$[0].admissionDate", is("2021-02-02")))
-				.andExpect(jsonPath("$[0].status", is("pending")))
-				.andExpect(jsonPath("$[1].id", is(2)))
-				.andExpect(jsonPath("$[1].admissionDate", is("2021-10-02"))).andExpect(jsonPath("$[1].status", is("approved")));
+						new Admission(2L, LocalDate.of(2021, 10, 2), "approved")));
+		this.mvc.perform(get("/api/admissions/allAdmissions").accept(MediaType.APPLICATION_JSON))
+				.andExpect(status().isOk()).andExpect(jsonPath("$[0].id", is(1)))
+				.andExpect(jsonPath("$[0].admissionDate", is("2021-02-02")))
+				.andExpect(jsonPath("$[0].status", is("pending"))).andExpect(jsonPath("$[1].id", is(2)))
+				.andExpect(jsonPath("$[1].admissionDate", is("2021-10-02")))
+				.andExpect(jsonPath("$[1].status", is("approved")));
 	}
-	
+
 	@Test
 	void test_OneAdmissionById_WithExistingAdmission() throws Exception {
 		when(admissionService.findAdmissionById(anyLong()))
@@ -73,23 +73,34 @@ class AdmissionRestControllerTest {
 		this.mvc.perform(get("/api/admissions/1").accept(MediaType.APPLICATION_JSON)).andExpect(status().isOk())
 				.andExpect(content().string(""));
 	}
+
 	@Test
 	void test_CreateNewAdmission() throws Exception {
 		when(admissionService.createNewAdmissionDetails(any(Admission.class)))
 				.thenReturn(new Admission(1L, LocalDate.of(2021, 02, 2), "pending"));
 
-		this.mvc.perform(post("/api/admissions/newAdmission").contentType(MediaType.APPLICATION_JSON).content(
-				"{\"admissionDate\":\"2021-02-02\",\"status\":\"pending\"}}"))
-				.andExpect(status().isOk()).andExpect(jsonPath("$.id", is(1)))
-				.andExpect(jsonPath("$.admissionDate", is("2021-02-02"))).andExpect(jsonPath("$.status", is("pending")));
+		this.mvc.perform(post("/api/admissions/newAdmission").contentType(MediaType.APPLICATION_JSON)
+				.content("{\"admissionDate\":\"2021-02-02\",\"status\":\"pending\"}}")).andExpect(status().isOk())
+				.andExpect(jsonPath("$.id", is(1))).andExpect(jsonPath("$.admissionDate", is("2021-02-02")))
+				.andExpect(jsonPath("$.status", is("pending")));
 	}
-
 
 	@Test
 	void test_DeleteAdmission() throws Exception {
 		doNothing().when(admissionService).deleteAdmissionById(null);
 
 		this.mvc.perform(delete("/api/admissions/deleteAdmission/1")).andExpect(status().isNoContent());
+	}
+
+	@Test
+	void test_UpdateAdmission() throws Exception {
+		Admission updatedAdmission = new Admission(1L, LocalDate.of(2021, 02, 2), "pending");
+		when(admissionService.updateAdmissionInformation(anyLong(), any(Admission.class))).thenReturn(updatedAdmission);
+
+		this.mvc.perform(put("/api/admissions/updateAdmission/1").contentType(MediaType.APPLICATION_JSON)
+				.content("{\"admissionDate\":\"2021-02-02\",\"status\":\"pending\"}}")).andExpect(status().isOk())
+				.andExpect(jsonPath("$.id", is(1))).andExpect(jsonPath("$.admissionDate", is("2021-02-02")))
+				.andExpect(jsonPath("$.status", is("pending")));
 	}
 
 }
