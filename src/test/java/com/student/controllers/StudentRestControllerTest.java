@@ -4,6 +4,7 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -14,6 +15,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.time.LocalDate;
+import java.util.NoSuchElementException;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -112,5 +114,14 @@ class StudentRestControllerTest {
 
 		this.mvc.perform(delete("/api/students/deleteStudent/1")).andExpect(status().isNoContent());
 	}
+	
+	@Test
+	void test_DeleteStudent_NotFound() throws Exception {
+	    // Mock the service to throw NoSuchElementException when attempting to delete a non-existent student
+	    doThrow(new NoSuchElementException("Student does not exist")).when(studentService).deleteStudentById(anyLong());
 
+	    this.mvc.perform(delete("/api/students/deleteStudent/999")) // Assume student with id 999 does not exist
+	            .andExpect(status().isNotFound()); // Expecting a 404 Not Found status
+	}
+	
 }

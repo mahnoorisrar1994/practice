@@ -22,6 +22,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.transaction.TransactionSystemException;
 
 import com.student.model.Admission;
 import com.student.repositories.AdmissionRepository;
@@ -62,13 +63,13 @@ class AdmissionServiceTest {
 
 	@Test
 	void test_createNewAdmission_Detail() {
-		 // Given
+		// Given
 		Admission toSave = spy(new Admission());
 		Admission saved = new Admission(1L, LocalDate.of(2021, 02, 2), "pending");
 
 		when(admissionRepository.save(any(Admission.class))).thenReturn(saved);
 		// When
-		
+
 		Admission result = admissionService.createNewAdmissionDetails(toSave);
 		// Then
 		assertThat(result).isSameAs(saved);
@@ -97,12 +98,12 @@ class AdmissionServiceTest {
 
 	@Test
 	void test_deleteAdmissiontDetail_found() {
-        Admission existingAdmissionDetails = new Admission(1L, LocalDate.of(2021, 02, 2), "pending");
-		
+		Admission existingAdmissionDetails = new Admission(1L, LocalDate.of(2021, 02, 2), "pending");
+
 		when(admissionRepository.findById(1L)).thenReturn(Optional.of(existingAdmissionDetails));
-		
+
 		admissionService.deleteAdmissionById(1L);
-		
+
 		verify(admissionRepository, times(1)).delete(existingAdmissionDetails);
 
 	}
@@ -112,12 +113,25 @@ class AdmissionServiceTest {
 		Long admissionId = 1L;
 		when(admissionRepository.findById(admissionId)).thenReturn(Optional.empty());
 
-		Throwable exception = assertThrows(NoSuchElementException.class, () -> {
+		NoSuchElementException exception = assertThrows(NoSuchElementException.class, () -> {
 			admissionService.deleteAdmissionById(admissionId);
 		});
-		assertThat(exception.getMessage()).isEqualTo("Admission does not exist");
-		verify(admissionRepository, never()).delete(any(Admission.class));
 
+		assertThat(exception.getMessage()).isEqualTo("Admission does not exist");
+
+		// Verify that delete is never called on the repository
+		verify(admissionRepository, never()).delete(any(Admission.class));
+	}
+
+	@Test
+	void test_ReadAllAdmission_TransactionalException() {
+		when(admissionRepository.findAll()).thenThrow(new TransactionSystemException("Transaction failed"));
+
+		TransactionSystemException exception = assertThrows(TransactionSystemException.class,
+				admissionService::readAllExistingAdmissions);
+
+		assertThat(exception.getMessage()).isEqualTo("Transaction failed");
+		verify(admissionRepository, times(1)).findAll();
 	}
 
 }

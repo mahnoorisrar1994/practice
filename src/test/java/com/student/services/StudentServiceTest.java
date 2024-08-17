@@ -22,6 +22,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.transaction.TransactionSystemException;
 
 import com.student.model.Admission;
 import com.student.model.Student;
@@ -42,9 +43,9 @@ class StudentServiceTest {
 		Admission secondAdmission = new Admission(2L, LocalDate.of(2021, 10, 2), "approved");
 		Student firstStudent = new Student(1L, "Hamza", "Khan", "Hamzakhan@gmail.com", firstAdmission);
 		Student secondStudent = new Student(2L, "Hamza", "Khan", "Hamzakhan@gmail.com", secondAdmission);
-		// Configure the mock to return the student list
+
 		when(studentRepository.findAll()).thenReturn(asList(firstStudent, secondStudent));
-		// Test the method
+
 		assertThat(studentService.readAllStudents()).containsExactly(firstStudent, secondStudent);
 
 	}
@@ -66,21 +67,19 @@ class StudentServiceTest {
 
 	@Test
 	void test_createNewStudent_Details() {
-	    Admission firstAdmission = new Admission(1L, LocalDate.of(2021, 02, 2), "pending");
-	    Student toSave = new Student(99L, "", "", "", firstAdmission);  // No spy()
-	    Student saved = new Student(1L, "Hamza", "Khan", "Hamzakhan@gmail.com", firstAdmission);
+		Admission firstAdmission = new Admission(1L, LocalDate.of(2021, 02, 2), "pending");
+		Student toSave = new Student(99L, "", "", "", firstAdmission);
+		Student saved = new Student(1L, "Hamza", "Khan", "Hamzakhan@gmail.com", firstAdmission);
 
-	    when(studentRepository.save(any(Student.class))).thenReturn(saved);
+		when(studentRepository.save(any(Student.class))).thenReturn(saved);
 
-	    Student result = studentService.createNewStudentDetails(toSave);
+		Student result = studentService.createNewStudentDetails(toSave);
 
-	    assertThat(result).isSameAs(saved);
+		assertThat(result).isSameAs(saved);
 
-	    // Verifying interactions
-	    InOrder inOrder = Mockito.inOrder(studentRepository);
-	    inOrder.verify(studentRepository).save(toSave);  // Verifying save() was called on repository
+		InOrder inOrder = Mockito.inOrder(studentRepository);
+		inOrder.verify(studentRepository).save(toSave);
 	}
-
 
 	@Test
 	void test_updateStudent_Information() {
@@ -103,23 +102,93 @@ class StudentServiceTest {
 	void test_deleteStudentDetail_found() {
 		Admission firstAdmission = new Admission(1L, LocalDate.of(2021, 02, 2), "pending");
 		Student existingStudentDetails = new Student(1L, "Hamza", "Khan", "Hamzakhan@gmail.com", firstAdmission);
-		
+
 		when(studentRepository.findById(1L)).thenReturn(Optional.of(existingStudentDetails));
-		
+
 		studentService.deleteStudentById(1L);
-		
+
 		verify(studentRepository, times(1)).delete(existingStudentDetails);
 	}
-	
+
 	@Test
 	void test_deleteStudentDetail_notFound() {
 		Long studentId = 1L;
 		when(studentRepository.findById(studentId)).thenReturn(Optional.empty());
 
 		Throwable exception = assertThrows(NoSuchElementException.class, () -> {
-			studentService.deleteStudentById(studentId);
+			studentService.deleteStudentById(studentId); // Call real service method
 		});
 		assertThat(exception.getMessage()).isEqualTo("Student does not exist");
 		verify(studentRepository, never()).delete(any(Student.class));
+	}
+
+	@Test
+	void test_deleteStudentDetail_TransactionalException() {
+		Long studentId = 1L;
+		when(studentRepository.findById(studentId)).thenThrow(new TransactionSystemException("Transaction failed"));
+
+		Throwable exception = assertThrows(TransactionSystemException.class, () -> {
+			studentService.deleteStudentById(studentId);
+		});
+
+		assertThat(exception.getMessage()).isEqualTo("Transaction failed");
+		verify(studentRepository, times(1)).findById(studentId);
+	}
+
+	@Test
+	void test_updateStudent_Information_TransactionalException() {
+		Admission firstAdmission = new Admission(1L, LocalDate.of(2021, 02, 2), "pending");
+		Student replacement = spy(new Student(null, "Hamza", "Khan", "Hamza@gmail.com", firstAdmission));
+
+		when(studentRepository.save(any(Student.class)))
+				.thenThrow(new TransactionSystemException("Transaction failed"));
+
+		Throwable exception = assertThrows(TransactionSystemException.class, () -> {
+			studentService.updateStudentInformation(1L, replacement);
+		});
+
+		assertThat(exception.getMessage()).isEqualTo("Transaction failed");
+		InOrder inOrder = Mockito.inOrder(replacement, studentRepository);
+		inOrder.verify(replacement).setId(1L);
+		inOrder.verify(studentRepository).save(replacement);
+	}
+
+	@Test
+	void test_createNewStudent_TransactionalException() {
+		Admission firstAdmission = new Admission(1L, LocalDate.of(2021, 02, 2), "pending");
+		Student toSave = new Student(99L, "", "", "", firstAdmission);
+
+		when(studentRepository.save(any(Student.class)))
+				.thenThrow(new TransactionSystemException("Transaction failed"));
+
+		Throwable exception = assertThrows(TransactionSystemException.class, () -> {
+			studentService.createNewStudentDetails(toSave);
+		});
+
+		assertThat(exception.getMessage()).isEqualTo("Transaction failed");
+		verify(studentRepository, times(1)).save(toSave);
+	}
+
+	@Test
+	void test_getStudentById_TransactionalException() {
+		when(studentRepository.findById(anyLong())).thenThrow(new TransactionSystemException("Transaction failed"));
+
+		Throwable exception = assertThrows(TransactionSystemException.class, () -> {
+			studentService.findStudentById(1L);
+		});
+
+		assertThat(exception.getMessage()).isEqualTo("Transaction failed");
+		verify(studentRepository, times(1)).findById(1L);
+	}
+
+	@Test
+	void test_ReadAllStudents_TransactionalException() {
+	    when(studentRepository.findAll()).thenThrow(new TransactionSystemException("Transaction failed"));
+
+	    TransactionSystemException exception = assertThrows(TransactionSystemException.class, 
+	    	    studentService::readAllStudents);
+
+	    assertThat(exception.getMessage()).isEqualTo("Transaction failed");
+	    verify(studentRepository, times(1)).findAll();
 	}
 }
