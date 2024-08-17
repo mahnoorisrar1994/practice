@@ -2,6 +2,7 @@ package com.student.controllers;
 
 import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.is;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -20,6 +21,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 import com.student.model.Admission;
+import com.student.model.Student;
 import com.student.services.AdmissionService;
 
 @ExtendWith(MockitoExtension.class)
@@ -49,6 +51,22 @@ class AdmissionRestControllerTest {
 				.andExpect(jsonPath("$[0].status", is("pending")))
 				.andExpect(jsonPath("$[1].id", is(2)))
 				.andExpect(jsonPath("$[1].admissionDate", is("2021-10-02"))).andExpect(jsonPath("$[1].status", is("approved")));
+	}
+	
+	@Test
+	void test_OneAdmissionById_WithExistingAdmission() throws Exception {
+		when(admissionService.findAdmissionById(anyLong()))
+				.thenReturn(new Admission(1L, LocalDate.of(2021, 02, 2), "pending"));
+		this.mvc.perform(get("/api/admissions/1").accept(MediaType.APPLICATION_JSON)).andExpect(status().isOk())
+				.andExpect(jsonPath("$.id", is(1))).andExpect(jsonPath("$.admissionDate", is("2021-02-02")))
+				.andExpect(jsonPath("$.status", is("pending")));
+	}
+
+	@Test
+	void test_OneAdmissionById_WithNotFoundAdmission() throws Exception {
+		when(admissionService.findAdmissionById(anyLong())).thenReturn(null);
+		this.mvc.perform(get("/api/admissions/1").accept(MediaType.APPLICATION_JSON)).andExpect(status().isOk())
+				.andExpect(content().string(""));
 	}
 
 }
