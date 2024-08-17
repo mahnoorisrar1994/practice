@@ -2,9 +2,14 @@ package com.student.controllers;
 
 import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.is;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -67,6 +72,24 @@ class AdmissionRestControllerTest {
 		when(admissionService.findAdmissionById(anyLong())).thenReturn(null);
 		this.mvc.perform(get("/api/admissions/1").accept(MediaType.APPLICATION_JSON)).andExpect(status().isOk())
 				.andExpect(content().string(""));
+	}
+	@Test
+	void test_CreateNewAdmission() throws Exception {
+		when(admissionService.createNewAdmissionDetails(any(Admission.class)))
+				.thenReturn(new Admission(1L, LocalDate.of(2021, 02, 2), "pending"));
+
+		this.mvc.perform(post("/api/admissions/newAdmission").contentType(MediaType.APPLICATION_JSON).content(
+				"{\"admissionDate\":\"2021-02-02\",\"status\":\"pending\"}}"))
+				.andExpect(status().isOk()).andExpect(jsonPath("$.id", is(1)))
+				.andExpect(jsonPath("$.admissionDate", is("2021-02-02"))).andExpect(jsonPath("$.status", is("pending")));
+	}
+
+
+	@Test
+	void test_DeleteAdmission() throws Exception {
+		doNothing().when(admissionService).deleteAdmissionById(null);
+
+		this.mvc.perform(delete("/api/admissions/deleteAdmission/1")).andExpect(status().isNoContent());
 	}
 
 }
