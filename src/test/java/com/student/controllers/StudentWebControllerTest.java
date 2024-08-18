@@ -1,6 +1,7 @@
 package com.student.controllers;
 
 import static org.hamcrest.CoreMatchers.nullValue;
+import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
@@ -83,4 +84,10 @@ class StudentWebControllerTest {
 
 	}
 
+	@Test
+	void test_EditNewStudent() throws Exception {
+		mvc.perform(get("/new")).andExpect(view().name("edit")).andExpect(model().attribute("student", new Student()))
+				.andExpect(model().attribute("message", ""));
+		verifyZeroInteractions(studentService);
+	}
 }
