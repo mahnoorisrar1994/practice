@@ -1,5 +1,6 @@
 package com.student.model;
 
+
 import java.util.Objects;
 
 import javax.persistence.CascadeType;
@@ -99,6 +100,8 @@ public class Student {
 					&& Objects.equals(firstName, other.firstName) && Objects.equals(id, other.id)
 					&& Objects.equals(lastName, other.lastName);
 		}
+
+		
 
 		
 		

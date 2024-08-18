@@ -1,13 +1,13 @@
 package com.student.model;
 
 import java.time.LocalDate;
-import java.util.Objects;
-
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToOne;
+import java.util.Objects;
+
 
 @Entity
 public class Admission {
@@ -69,7 +69,7 @@ public class Admission {
 
 		@Override
 		public int hashCode() {
-			return Objects.hash(admissionDate, id, status);
+			return Objects.hash(admissionDate, id, status, student);
 		}
 
 		@Override
@@ -82,7 +82,7 @@ public class Admission {
 				return false;
 			Admission other = (Admission) obj;
 			return Objects.equals(admissionDate, other.admissionDate) && Objects.equals(id, other.id)
-					&& Objects.equals(status, other.status);
+					&& Objects.equals(status, other.status) && Objects.equals(student, other.student);
 		}
 
 		
