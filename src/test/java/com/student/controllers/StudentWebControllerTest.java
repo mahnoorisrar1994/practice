@@ -1,10 +1,15 @@
 package com.student.controllers;
 
 import static org.hamcrest.CoreMatchers.nullValue;
-import static org.mockito.Mockito.verifyZeroInteractions;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
@@ -15,6 +20,7 @@ import java.util.List;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentMatchers;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -88,6 +94,29 @@ class StudentWebControllerTest {
 	void test_EditNewStudent() throws Exception {
 		mvc.perform(get("/new")).andExpect(view().name("edit")).andExpect(model().attribute("student", new Student()))
 				.andExpect(model().attribute("message", ""));
-		verifyZeroInteractions(studentService);
+		verifyNoInteractions(studentService);
 	}
+
+	@Test
+	void test_PostStudentWithoutId_ShouldInsertNewStudent() throws Exception {
+		mvc.perform(post("/save").param("firstName", "Hamza").param("lastName", "Khan").param("email",
+				"Hamzakhan@gmail.com")).andExpect(redirectedUrl("/")); // go back to the main page
+
+		verify(studentService).createNewStudentDetails(ArgumentMatchers.any(Student.class));
+	}
+
+	@Test
+	void test_PostStudentWithId_ShouldUpdateExistingStudent() throws Exception {
+		mvc.perform(post("/save").param("id", "1").param("firstName", "Hamza").param("lastName", "Khan").param("email",
+				"Hamzakhan@gmail.com")).andExpect(view().name("redirect:/")); // go back to the main page
+
+		verify(studentService).updateStudentInformation(eq(1L), ArgumentMatchers.any(Student.class));
+	}
+
+	@Test
+	void test_DeleteStudent_ByExistingIdShouldDelete() throws Exception {
+		mvc.perform(get("/delete/1")).andExpect(view().name("redirect:/"));
+		verify(studentService, times(1)).deleteStudentById(1L);
+	}
+
 }

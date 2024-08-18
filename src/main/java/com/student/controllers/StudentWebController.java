@@ -7,13 +7,14 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 
 import com.student.model.Student;
 import com.student.services.StudentService;
 
 @Controller
 public class StudentWebController {
-	
+
 	private static final String MESSAGE_ATTRIBUTE = "message";
 	private static final String INDEX = "index";
 	private static final String EDIT = "edit";
@@ -44,5 +45,22 @@ public class StudentWebController {
 		model.addAttribute(MESSAGE_ATTRIBUTE, "");
 		return EDIT;
 
+	}
+
+	@PostMapping("/save")
+	public String saveStudent(Student student) {
+		final Long id = student.getId();
+		if (id == null) {
+			studentService.createNewStudentDetails(student);
+		} else {
+			studentService.updateStudentInformation(id, student);
+		}
+		return "redirect:/";
+	}
+
+	@GetMapping("/delete/{id}")
+	public String deleteProperty(@PathVariable Long id, Model model) {
+		studentService.deleteStudentById(id);
+		return "redirect:/";
 	}
 }
