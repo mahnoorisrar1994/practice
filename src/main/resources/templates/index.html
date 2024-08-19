@@ -36,6 +36,8 @@
 					<td th:text="${student.email}"></td>
 					<td th:text="${student.admission.status}"></td>
 					<td><a th:href="@{'/edit/' + ${student.id}}">Edit</a></td>
+					<td><a th:id="'delete_student' + ${student.id}"
+							th:href="@{'/delete/' + ${student.id}}">Delete</a></td>
 				</tr>
 			</tbody>
 		</table>

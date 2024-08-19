@@ -123,7 +123,7 @@ class StudentWebControllerTest {
 
 	@Test
 	void test_DeleteStudent_ByExistingIdShouldDelete() throws Exception {
-		mvc.perform(get("/delete/1")).andExpect(view().name("redirect:/"));
+		mvc.perform(get("/delete/1")).andExpect(view().name("/delete"));
 		verify(studentService, times(1)).deleteStudentById(1L);
 	}
 

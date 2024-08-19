@@ -3,6 +3,8 @@ package com.student.controllers;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -19,6 +21,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
 import com.gargoylesoftware.htmlunit.WebClient;
+import com.gargoylesoftware.htmlunit.html.HtmlAnchor;
 import com.gargoylesoftware.htmlunit.html.HtmlButton;
 import com.gargoylesoftware.htmlunit.html.HtmlForm;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
@@ -36,7 +39,7 @@ class StudentWebControllerHtmlUnitTest {
 
 	@MockBean
 	private StudentService studentService;
-	
+
 	@MockBean
 	private AdmissionService admissionService;
 
@@ -100,5 +103,20 @@ class StudentWebControllerHtmlUnitTest {
 		assertThat(resultPage.getUrl().toString()).endsWith("/");
 
 		verify(studentService).updateStudentInformation(eq(1L), any(Student.class));
+	}
+
+	@Test
+	void test_DeleteStudent_ShouldDisplayConfirmationMessage() throws Exception {
+		doNothing().when(studentService).deleteStudentById(1L);
+
+		HtmlPage page = webClient.getPage("/delete/1");
+		
+		verify(studentService, times(1)).deleteStudentById(1L);
+
+		String pageContent = page.getBody().getTextContent();
+		assertThat(pageContent).contains("Student with ID 1 was deleted.");
+
+		HtmlAnchor newStudentLink = page.getAnchorByHref("/new");
+		assertThat(newStudentLink).isNotNull();
 	}
 }

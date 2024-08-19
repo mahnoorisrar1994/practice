@@ -68,8 +68,10 @@ public class StudentWebController {
 	}
 
 	@GetMapping("/delete/{id}")
-	public String deleteProperty(@PathVariable Long id, Model model) {
-		studentService.deleteStudentById(id);
-		return "redirect:/";
+	public String deleteStudent(@PathVariable Long id, Model model) {
+	    studentService.deleteStudentById(id);
+	    model.addAttribute("message", "Student with ID " + id + " has been deleted.");
+	    return "/delete";
 	}
+
 }
