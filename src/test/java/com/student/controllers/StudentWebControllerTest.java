@@ -30,6 +30,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import com.student.model.Admission;
 import com.student.model.Student;
+import com.student.services.AdmissionService;
 import com.student.services.StudentService;
 
 @ExtendWith(MockitoExtension.class)
@@ -41,6 +42,9 @@ class StudentWebControllerTest {
 
 	@MockBean
 	private StudentService studentService;
+
+	@MockBean
+	private AdmissionService admissionService;
 
 	@Test
 	void test_Status200() throws Exception {
@@ -77,9 +81,11 @@ class StudentWebControllerTest {
 	void test_EditStudent_WhenStudentIsFound() throws Exception {
 		Admission firstAdmission = new Admission(1L, LocalDate.of(2021, 2, 2), "pending");
 		Student students = new Student(1L, "Hamza", "Khan", "Hamzakhan@gmail.com", firstAdmission);
+		List<Admission> admissions = Arrays.asList(firstAdmission);
 		when(studentService.findStudentById(1L)).thenReturn(students);
+		when(admissionService.readAllExistingAdmissions()).thenReturn(admissions);
 		mvc.perform(get("/edit/1")).andExpect(view().name("edit")).andExpect(model().attribute("student", students))
-				.andExpect(model().attribute("message", ""));
+				.andExpect(model().attribute("admissions", admissions)).andExpect(model().attribute("message", ""));
 	}
 
 	@Test
@@ -92,8 +98,10 @@ class StudentWebControllerTest {
 
 	@Test
 	void test_EditNewStudent() throws Exception {
-		mvc.perform(get("/new")).andExpect(view().name("edit")).andExpect(model().attribute("student", new Student()))
-				.andExpect(model().attribute("message", ""));
+		List<Admission> admissions = Arrays.asList(new Admission(1L, LocalDate.of(2021, 2, 2), "pending")); 
+		when(admissionService.readAllExistingAdmissions()).thenReturn(admissions);
+		mvc.perform(get("/new")).andExpect(status().isOk()).andExpect(view().name("edit")).andExpect(model().attributeExists("student"))
+				.andExpect(model().attribute("admission", admissions)).andExpect(model().attribute("message", ""));
 		verifyNoInteractions(studentService);
 	}
 

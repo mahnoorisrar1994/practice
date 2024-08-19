@@ -9,7 +9,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
+import com.student.model.Admission;
 import com.student.model.Student;
+import com.student.services.AdmissionService;
 import com.student.services.StudentService;
 
 @Controller
@@ -21,6 +23,9 @@ public class StudentWebController {
 
 	@Autowired
 	private StudentService studentService;
+	
+	@Autowired
+	private AdmissionService admissionService;
 
 	@GetMapping("/")
 	public String index(Model model) {
@@ -33,16 +38,20 @@ public class StudentWebController {
 
 	@GetMapping("/edit/{id}")
 	public String editStudent(@PathVariable long id, Model model) {
+		List<Admission> admissions = admissionService.readAllExistingAdmissions();
 		Student studentById = studentService.findStudentById(id);
 		model.addAttribute("student", studentById);
+		model.addAttribute("admissions", admissions);
 		model.addAttribute(MESSAGE_ATTRIBUTE, studentById == null ? "No student found with id: " + id : "");
 		return EDIT;
 	}
 
 	@GetMapping("/new")
 	public String newStudent(Model model) {
-		model.addAttribute("student", new Student());
+		List<Admission> admissions = admissionService.readAllExistingAdmissions();
+		model.addAttribute("admission", admissions);
 		model.addAttribute(MESSAGE_ATTRIBUTE, "");
+		model.addAttribute("student", new Student());
 		return EDIT;
 
 	}
