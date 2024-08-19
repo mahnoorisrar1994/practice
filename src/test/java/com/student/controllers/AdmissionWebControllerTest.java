@@ -1,5 +1,6 @@
 package com.student.controllers;
 
+import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
@@ -8,6 +9,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import java.time.LocalDate;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import org.junit.jupiter.api.Test;
@@ -53,5 +55,23 @@ class AdmissionWebControllerTest {
 		mvc.perform(get("/admissions")).andExpect(view().name("admission_index")).andExpect(model().attribute("admissions", admissions))
 				.andExpect(model().attribute("message", ""));
 	}
+	
+	@Test
+	void test_HomeView_ShowsMessageWhenThereAreNoAdmissions() throws Exception {
+		when(admissionService.readAllExistingAdmissions()).thenReturn(Collections.emptyList());
+		mvc.perform(get("/admissions")).andExpect(view().name("admission_index"))
+				.andExpect(model().attribute("admissions", Collections.emptyList()))
+				.andExpect(model().attribute("message", "No admission is presented"));
+	}
+	
+	@Test
+	void test_EditNewAdmission() throws Exception {
+		mvc.perform(get("/newAdmission")).andExpect(status().isOk()).andExpect(view().name("edit_admission")).andExpect(model().attributeExists("admission"))
+				.andExpect(model().attribute("message", ""));
+		verifyNoInteractions(admissionService);
+	}
+	
+
+
 
 }

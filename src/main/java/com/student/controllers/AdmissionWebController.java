@@ -24,5 +24,12 @@ public class AdmissionWebController {
 		model.addAttribute("message", admissions.isEmpty() ? "No admission is presented" : "");
 		return "admission_index";
 	}
+	@GetMapping("/newAdmission")
+	public String showNewAdmissionRecord(Model model) {
+		model.addAttribute("message", "");
+		model.addAttribute("admission", new Admission());
+		return "edit_admission";
+	}
+	
 
 }
