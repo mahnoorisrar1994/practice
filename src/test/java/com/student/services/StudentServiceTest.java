@@ -39,8 +39,8 @@ class StudentServiceTest {
 
 	@Test
 	void test_ReadAllStudents() {
-		Admission firstAdmission = new Admission(1L, LocalDate.of(2021, 02, 2), "pending");
-		Admission secondAdmission = new Admission(2L, LocalDate.of(2021, 10, 2), "approved");
+		Admission firstAdmission = new Admission(1L, LocalDate.of(2021, 02, 2), "pending", "bacehlors");
+		Admission secondAdmission = new Admission(2L, LocalDate.of(2021, 10, 2), "approved", "masters");
 		Student firstStudent = new Student(1L, "Hamza", "Khan", "Hamzakhan@gmail.com", firstAdmission);
 		Student secondStudent = new Student(2L, "Hamza", "Khan", "Hamzakhan@gmail.com", secondAdmission);
 
@@ -52,7 +52,7 @@ class StudentServiceTest {
 
 	@Test
 	void test_getStudentById_found() {
-		Admission firstAdmission = new Admission(1L, LocalDate.of(2021, 02, 2), "pending");
+		Admission firstAdmission = new Admission(1L, LocalDate.of(2021, 02, 2), "pending", "bachelors");
 		Student firstStudent = new Student(1L, "Hamza", "Khan", "Hamzakhan@gmail.com", firstAdmission);
 		when(studentRepository.findById(1L)).thenReturn(Optional.of(firstStudent));
 		// Test the method
@@ -67,7 +67,7 @@ class StudentServiceTest {
 
 	@Test
 	void test_createNewStudent_Details() {
-		Admission firstAdmission = new Admission(1L, LocalDate.of(2021, 02, 2), "pending");
+		Admission firstAdmission = new Admission(1L, LocalDate.of(2021, 02, 2), "pending", "bachelors");
 		Student toSave = new Student(99L, "", "", "", firstAdmission);
 		Student saved = new Student(1L, "Hamza", "Khan", "Hamzakhan@gmail.com", firstAdmission);
 
@@ -83,7 +83,7 @@ class StudentServiceTest {
 
 	@Test
 	void test_updateStudent_Information() {
-		Admission firstAdmission = new Admission(1L, LocalDate.of(2021, 02, 2), "pending");
+		Admission firstAdmission = new Admission(1L, LocalDate.of(2021, 02, 2), "pending", "bachelors");
 		Student replacement = spy(new Student(null, "Hamza", "Khan", "Hamza@gmail.com", firstAdmission));
 		Student replaced = new Student(1L, "Hamza", "Khan", "Hamzakhan@gmail.com", firstAdmission);
 
@@ -100,7 +100,7 @@ class StudentServiceTest {
 
 	@Test
 	void test_deleteStudentDetail_found() {
-		Admission firstAdmission = new Admission(1L, LocalDate.of(2021, 02, 2), "pending");
+		Admission firstAdmission = new Admission(1L, LocalDate.of(2021, 02, 2), "pending", "bachelors");
 		Student existingStudentDetails = new Student(1L, "Hamza", "Khan", "Hamzakhan@gmail.com", firstAdmission);
 
 		when(studentRepository.findById(1L)).thenReturn(Optional.of(existingStudentDetails));
@@ -137,7 +137,7 @@ class StudentServiceTest {
 
 	@Test
 	void test_updateStudent_Information_TransactionalException() {
-		Admission firstAdmission = new Admission(1L, LocalDate.of(2021, 02, 2), "pending");
+		Admission firstAdmission = new Admission(1L, LocalDate.of(2021, 02, 2), "pending", "bachelors");
 		Student replacement = spy(new Student(null, "Hamza", "Khan", "Hamza@gmail.com", firstAdmission));
 
 		when(studentRepository.save(any(Student.class)))
@@ -155,7 +155,7 @@ class StudentServiceTest {
 
 	@Test
 	void test_createNewStudent_TransactionalException() {
-		Admission firstAdmission = new Admission(1L, LocalDate.of(2021, 02, 2), "pending");
+		Admission firstAdmission = new Admission(1L, LocalDate.of(2021, 02, 2), "pending", "bachelors");
 		Student toSave = new Student(99L, "", "", "", firstAdmission);
 
 		when(studentRepository.save(any(Student.class)))

@@ -25,6 +25,14 @@ public class AdmissionWebController {
 		model.addAttribute("message", admissions.isEmpty() ? "No admission is presented" : "");
 		return "admission_index";
 	}
+	
+	@GetMapping("/editAdmission/{id}")
+	public String editStudent(@PathVariable long id, Model model) {
+		Admission admissionById = admissionService.findAdmissionById(id);
+		model.addAttribute("admission", admissionById);
+		model.addAttribute("message", admissionById == null ? "No admission found with id: " + id : "");
+		return "edit_admission";
+	}
 
 	@GetMapping("/newAdmission")
 	public String showNewAdmissionRecord(Model model) {
@@ -35,13 +43,16 @@ public class AdmissionWebController {
 
 	@PostMapping("/saveAdmission")
 	public String saveAdmission(Admission admission) {
-		if (admission.getId() != null) {
-			admissionService.updateAdmissionInformation(admission.getId(), admission);
-		} else {
-			admissionService.createNewAdmissionDetails(admission);
-		}
-		return "redirect:/admissions";
+	    if (admission.getId() != null) {
+	        // If the ID is not null, update the existing admission
+	        admissionService.updateAdmissionInformation(admission.getId(), admission);
+	    } else {
+	        // If the ID is null, create a new admission
+	        admissionService.createNewAdmissionDetails(admission);
+	    }
+	    return "redirect:/admissions";
 	}
+
 	
 	@GetMapping("/deleteAdmission/{id}")
 	public String deleteAdmission(@PathVariable Long id, Model model) {

@@ -51,8 +51,8 @@ class StudentRestControllerTest {
 
 	@Test
 	void test_AllStudentsNotEmpty() throws Exception {
-		Admission firstAdmission = new Admission(1L, LocalDate.of(2021, 02, 2), "pending");
-		Admission secondAdmission = new Admission(2L, LocalDate.of(2021, 10, 2), "approved");
+		Admission firstAdmission = new Admission(1L, LocalDate.of(2021, 02, 2), "pending", "bachelors");
+		Admission secondAdmission = new Admission(2L, LocalDate.of(2021, 10, 2), "approved", "masters");
 		when(studentService.readAllStudents())
 				.thenReturn(asList(new Student(1L, "Hamza", "Khan", "Hamzakhan@gmail.com", firstAdmission),
 						new Student(2L, "Hamza", "Khan", "Hamzakhan@gmail.com", secondAdmission)));
@@ -66,7 +66,7 @@ class StudentRestControllerTest {
 
 	@Test
 	void test_OneStudentById_WithExistingStudent() throws Exception {
-		Admission firstAdmission = new Admission(1L, LocalDate.of(2021, 02, 2), "pending");
+		Admission firstAdmission = new Admission(1L, LocalDate.of(2021, 02, 2), "pending", "bachelors");
 		when(studentService.findStudentById(anyLong()))
 				.thenReturn(new Student(1L, "Hamza", "Khan", "Hamzakhan@gmail.com", firstAdmission));
 		this.mvc.perform(get("/api/students/1").accept(MediaType.APPLICATION_JSON)).andExpect(status().isOk())
@@ -84,7 +84,7 @@ class StudentRestControllerTest {
 
 	@Test
 	void test_CreateNewStudent() throws Exception {
-		Admission firstAdmission = new Admission(1L, LocalDate.of(2021, 02, 2), "pending");
+		Admission firstAdmission = new Admission(1L, LocalDate.of(2021, 02, 2), "pending", "bachelors");
 		when(studentService.createNewStudentDetails(any(Student.class)))
 				.thenReturn(new Student(1L, "Hamza", "Khan", "Hamzakhan@gmail.com", firstAdmission));
 
@@ -97,7 +97,7 @@ class StudentRestControllerTest {
 
 	@Test
 	void test_UpdateStudent() throws Exception {
-		Admission firstAdmission = new Admission(1L, LocalDate.of(2021, 2, 2), "pending");
+		Admission firstAdmission = new Admission(1L, LocalDate.of(2021, 2, 2), "pending", "bachelors");
 		Student updatedStudent = new Student(1L, "Hamza", "Khan", "hamzakhan@gmail.com", firstAdmission);
 		when(studentService.updateStudentInformation(anyLong(), any(Student.class))).thenReturn(updatedStudent);
 

@@ -54,7 +54,7 @@ class AdmissionWebControllerTest {
 
 	@Test
 	void test_HomeView_ShowAdmissions() throws Exception {
-		Admission admission = new Admission(1L, LocalDate.of(2021, 2, 2), "pending");
+		Admission admission = new Admission(1L, LocalDate.of(2021, 2, 2), "pending", "bachelors");
 		List<Admission> admissions = Arrays.asList(admission);
 
 		when(admissionService.readAllExistingAdmissions()).thenReturn(admissions);
@@ -81,7 +81,7 @@ class AdmissionWebControllerTest {
 	@Test
 	void test_PostAdmissionWithoutId_ShouldInsertewAdmission() throws Exception {
 
-		mvc.perform(post("/saveAdmission").param("admissionDate", "2021-02-02").param("status", "pending"))
+		mvc.perform(post("/saveAdmission").param("admissionDate", "2021-02-02").param("status", "pending").param("course", "bachelors"))
 				.andExpect(redirectedUrl("/admissions"));
 
 		verify(admissionService).createNewAdmissionDetails(ArgumentMatchers.any(Admission.class));
@@ -90,7 +90,7 @@ class AdmissionWebControllerTest {
 	@Test
 	void test_PostAdmissionWithId_ShouldUpdateExistingAdmission() throws Exception {
 		mvc.perform(
-				post("/saveAdmission").param("id", "1").param("admissionDate", "2021-02-02").param("status", "pending"))
+				post("/saveAdmission").param("id", "1").param("admissionDate", "2021-02-02").param("status", "pending").param("course", "bachelors"))
 				.andExpect(redirectedUrl("/admissions"));
 
 		verify(admissionService).updateAdmissionInformation(eq(1L), ArgumentMatchers.any(Admission.class));

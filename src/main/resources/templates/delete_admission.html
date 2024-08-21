@@ -1,0 +1,11 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Admission Deleted</title>
+</head>
+<body>
+    <h1 th:text="'Admission with ID ' + ${id} + ' was deleted.'"></h1>
+    <p><a th:href="@{/newAdmission}">New Admission</a></p>
+</body>
+</html>

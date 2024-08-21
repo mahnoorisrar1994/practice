@@ -11,6 +11,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 
+
 @Entity
 public class Student {
  
@@ -26,7 +27,6 @@ public class Student {
 	    @JoinColumn(name = "admission_id")  // Foreign key in the Student table
 	    private Admission admission;
 	    
-
 		public Student(Long id, String firstName, String lastName, String email, Admission admission) {
 			super();
 			this.id = id;
@@ -34,9 +34,8 @@ public class Student {
 			this.lastName = lastName;
 			this.email = email;
 			this.admission = admission;
-			
 		}
-		
+
 		public Student() {
 	        // Default constructor
 	    }

@@ -38,8 +38,8 @@ class AdmissionServiceTest {
 
 	@Test
 	void test_ReadAllExisting_admissions() {
-		Admission firstAdmission = new Admission(1L, LocalDate.of(2021, 02, 2), "pending");
-		Admission secondAdmission = new Admission(2L, LocalDate.of(2021, 10, 2), "approved");
+		Admission firstAdmission = new Admission(1L, LocalDate.of(2021, 02, 2), "pending", "bachelors");
+		Admission secondAdmission = new Admission(2L, LocalDate.of(2021, 10, 2), "approved", "masters");
 		// Configure the mock to return the student list
 		when(admissionRepository.findAll()).thenReturn(asList(firstAdmission, secondAdmission));
 		// Test the method
@@ -49,7 +49,7 @@ class AdmissionServiceTest {
 
 	@Test
 	void test_getAdmissionById_found() {
-		Admission firstAdmission = new Admission(1L, LocalDate.of(2021, 11, 2), "pending");
+		Admission firstAdmission = new Admission(1L, LocalDate.of(2021, 11, 2), "pending", "bachelors");
 		when(admissionRepository.findById(1L)).thenReturn(Optional.of(firstAdmission));
 		// Test the method
 		assertThat(admissionService.findAdmissionById(1)).isSameAs(firstAdmission);
@@ -65,7 +65,7 @@ class AdmissionServiceTest {
 	void test_createNewAdmission_Detail() {
 		// Given
 		Admission toSave = spy(new Admission());
-		Admission saved = new Admission(1L, LocalDate.of(2021, 02, 2), "pending");
+		Admission saved = new Admission(1L, LocalDate.of(2021, 02, 2), "pending", "bachelors");
 
 		when(admissionRepository.save(any(Admission.class))).thenReturn(saved);
 		// When
@@ -81,8 +81,8 @@ class AdmissionServiceTest {
 
 	@Test
 	void test_updateAdmissionInformation() {
-		Admission replacement = spy(new Admission(null, LocalDate.of(2021, 02, 2), "pending"));
-		Admission replaced = new Admission(1L, LocalDate.of(2021, 02, 2), "pending");
+		Admission replacement = spy(new Admission(null, LocalDate.of(2021, 02, 2), "pending", "bachelors"));
+		Admission replaced = new Admission(1L, LocalDate.of(2021, 02, 2), "pending", "bachelors");
 
 		when(admissionRepository.save(any(Admission.class))).thenReturn(replaced);
 
@@ -98,7 +98,7 @@ class AdmissionServiceTest {
 
 	@Test
 	void test_deleteAdmissiontDetail_found() {
-		Admission existingAdmissionDetails = new Admission(1L, LocalDate.of(2021, 02, 2), "pending");
+		Admission existingAdmissionDetails = new Admission(1L, LocalDate.of(2021, 02, 2), "pending", "bachelors");
 
 		when(admissionRepository.findById(1L)).thenReturn(Optional.of(existingAdmissionDetails));
 

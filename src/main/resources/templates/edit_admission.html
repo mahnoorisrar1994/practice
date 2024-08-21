@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta charset="UTF-8" />
+	<title>Edit Admission</title>
+</head>
+<body>
+	<h1>Edit Admission</h1>
+
+	<!-- Displaying a message if present -->
+	<div th:unless="${message.empty}">
+		<span th:text="${message}"></span>
+	</div>
+
+	<!-- Displaying the form if no message -->
+	<div th:if="${message.empty}">
+		<form name="admission_record" action="#" th:action="@{/saveAdmission}" th:object="${admission}" method="post">
+			<!-- Hidden field for the Admissions's identifier -->
+			<input type="hidden" th:field="*{id}" />
+			<p>
+				Admission Date: <input type="text" th:field="*{admissionDate}" />
+			</p>
+			<p>
+				Status: <input type="text" th:field="*{status}" />
+			</p>
+			<p>
+    Course: 
+    <select th:field="*{course}" required>
+        <option value="">Select a Course</option>
+        <option value="Bachelors">Bachelors</option>
+        <option value="Masters">Masters</option>
+    </select>
+</p>
+
+			
+			<button type="submit" name="btn_submit">Save</button>
+		</form>
+	</div>
+</body>
+</html>

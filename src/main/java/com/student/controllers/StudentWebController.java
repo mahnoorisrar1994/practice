@@ -48,12 +48,12 @@ public class StudentWebController {
 
 	@GetMapping("/new")
 	public String newStudent(Model model) {
-		List<Admission> admissions = admissionService.readAllExistingAdmissions();
-		model.addAttribute("admission", admissions);
-		model.addAttribute(MESSAGE_ATTRIBUTE, "");
-		model.addAttribute("student", new Student());
-		return EDIT;
-
+	    List<Admission> admissions = admissionService.readAllExistingAdmissions();
+	    System.out.println("Admissions found: " + admissions.size());
+	    model.addAttribute("admissions", admissions);
+	    model.addAttribute("message", "");
+	    model.addAttribute("student", new Student());
+	    return "edit";
 	}
 
 	@PostMapping("/save")

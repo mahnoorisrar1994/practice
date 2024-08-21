@@ -1,6 +1,8 @@
 package com.student.model;
 
 import java.time.LocalDate;
+
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -17,20 +19,22 @@ public class Admission {
 	
 	    @Id
         @GeneratedValue(strategy = GenerationType.IDENTITY)
+	    @Column(name = "admission_id")
 		private Long id;
 	    @DateTimeFormat(pattern = "yyyy-MM-dd")
 		private LocalDate admissionDate;
 	    private String status;
+	    private String course;
 	    
 	    @OneToOne(mappedBy = "admission")
 	    private Student student;
-	    
-		
-		 public Admission(Long id, LocalDate admissionDate, String status) {
+	
+		public Admission(Long id, LocalDate admissionDate, String status, String course) {
 			super();
 			this.id = id;
 			this.admissionDate = admissionDate;
 			this.status = status;
+			this.course = course;
 			
 		}
 
@@ -63,17 +67,17 @@ public class Admission {
 			this.status = status;
 		}
 		
-		public Student getStudent() {
-	        return student;
-	    }
 
-	    public void setStudent(Student student) {
-	        this.student = student;
-	    }
+		public String getCourse() {
+			return course;
+		}
+		public void setCourse(String course) {
+			this.course = course;
+		}
 
 		@Override
 		public int hashCode() {
-			return Objects.hash(admissionDate, id, status, student);
+			return Objects.hash(admissionDate, course, id, status, student);
 		}
 
 		@Override
@@ -85,9 +89,15 @@ public class Admission {
 			if (getClass() != obj.getClass())
 				return false;
 			Admission other = (Admission) obj;
-			return Objects.equals(admissionDate, other.admissionDate) && Objects.equals(id, other.id)
-					&& Objects.equals(status, other.status) && Objects.equals(student, other.student);
+			return Objects.equals(admissionDate, other.admissionDate) && Objects.equals(course, other.course)
+					&& Objects.equals(id, other.id) && Objects.equals(status, other.status)
+					&& Objects.equals(student, other.student);
 		}
+
+
+		
+		
+		
 
 		
 

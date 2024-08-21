@@ -59,7 +59,7 @@ class StudentWebControllerTest {
 
 	@Test
 	void test_HomeView_ShowStudents() throws Exception {
-		Admission firstAdmission = new Admission(1L, LocalDate.of(2021, 2, 2), "pending");
+		Admission firstAdmission = new Admission(1L, LocalDate.of(2021, 2, 2), "pending", "bachelors");
 		Student student = new Student(1L, "Hamza", "Khan", "Hamzakhan@gmail.com", firstAdmission);
 		List<Student> students = Arrays.asList(student);
 
@@ -79,7 +79,7 @@ class StudentWebControllerTest {
 
 	@Test
 	void test_EditStudent_WhenStudentIsFound() throws Exception {
-		Admission firstAdmission = new Admission(1L, LocalDate.of(2021, 2, 2), "pending");
+		Admission firstAdmission = new Admission(1L, LocalDate.of(2021, 2, 2), "pending", "bachelors");
 		Student students = new Student(1L, "Hamza", "Khan", "Hamzakhan@gmail.com", firstAdmission);
 		List<Admission> admissions = Arrays.asList(firstAdmission);
 		when(studentService.findStudentById(1L)).thenReturn(students);
@@ -98,12 +98,14 @@ class StudentWebControllerTest {
 
 	@Test
 	void test_EditNewStudent() throws Exception {
-		List<Admission> admissions = Arrays.asList(new Admission(1L, LocalDate.of(2021, 2, 2), "pending")); 
+		List<Admission> admissions = Arrays.asList(new Admission(1L, LocalDate.of(2021, 2, 2), "pending", "bachelors"));
 		when(admissionService.readAllExistingAdmissions()).thenReturn(admissions);
-		mvc.perform(get("/new")).andExpect(status().isOk()).andExpect(view().name("edit")).andExpect(model().attributeExists("student"))
-				.andExpect(model().attribute("admission", admissions)).andExpect(model().attribute("message", ""));
+		mvc.perform(get("/new")).andExpect(status().isOk()).andExpect(view().name("edit"))
+				.andExpect(model().attributeExists("student")).andExpect(model().attribute("admissions", admissions))
+				.andExpect(model().attribute("message", ""));
 		verifyNoInteractions(studentService);
 	}
+
 
 	@Test
 	void test_PostStudentWithoutId_ShouldInsertNewStudent() throws Exception {

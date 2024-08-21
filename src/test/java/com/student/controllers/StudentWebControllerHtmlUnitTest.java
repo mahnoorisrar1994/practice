@@ -58,8 +58,8 @@ class StudentWebControllerHtmlUnitTest {
 
 	@Test
 	void test_HomePageWithStudents_ShouldShowThemInATable() throws Exception {
-		Admission firstAdmission = new Admission(1L, LocalDate.of(2021, 2, 2), "pending");
-		Admission secondAdmission = new Admission(1L, LocalDate.of(2021, 4, 2), "approved");
+		Admission firstAdmission = new Admission(1L, LocalDate.of(2021, 2, 2), "pending", "bachelors");
+		Admission secondAdmission = new Admission(1L, LocalDate.of(2021, 4, 2), "approved", "masters");
 		when(studentService.readAllStudents())
 				.thenReturn(asList(new Student(1L, "Hamza", "Khan", "Hamzakhan@gmail.com", firstAdmission),
 						new Student(2L, "Hamza", "Khan", "Hamzakhan@gmail.com", secondAdmission)));
@@ -83,7 +83,7 @@ class StudentWebControllerHtmlUnitTest {
 
 	@Test
 	void test_EditExistentStudent() throws Exception {
-		Admission firstAdmission = new Admission(1L, LocalDate.of(2021, 2, 2), "pending");
+		Admission firstAdmission = new Admission(1L, LocalDate.of(2021, 2, 2), "pending", "bachelors");
 		Student existingStudent = new Student(1L, "Hamza", "Khan", "Hamzakhan@gmail.com", firstAdmission);
 		when(studentService.findStudentById(1)).thenReturn(existingStudent);
 
