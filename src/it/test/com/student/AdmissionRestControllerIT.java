@@ -1,11 +1,14 @@
 package com.student;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static io.restassured.RestAssured.given;
 
 import java.time.LocalDate;
-
+import java.util.List;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -71,6 +74,24 @@ public class AdmissionRestControllerIT {
 		// read it back from the repository
 		assertThat(admissionRepository.findById(saved.getId())).contains(saved);
 	}
+
+	@Test
+	void test_deleteAdmission() {
+	    // Create and save an admission to the repository
+	    List<Admission> admissions = List.of(new Admission(1L, LocalDate.of(2021, 02, 2), "pending", "bachelors"));
+	    admissionRepository.saveAll(admissions);
+
+	    // Send a DELETE request to delete the admission
+	    given().when().delete("/api/admissions/deleteAdmission/1").then().statusCode(204); // Expect 204 No Content
+
+	    // Verify that the admission has been deleted from the repository
+	    assertEquals(0, admissionRepository.findAll().size());
+	}
+
+
+
+
+
 
 
 }
