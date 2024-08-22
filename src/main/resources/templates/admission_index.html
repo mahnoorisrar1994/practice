@@ -8,7 +8,8 @@
 
 <body>
     <div>
-        <a th:href="@{/newAdmission}">New admission</a>
+       <p><a th:href="@{/newAdmission}">New Admission</a></p>
+       <p><a th:href="@{/admissions}">All Admissions</a></p>
     </div>
     <!-- IF NO Admission -->
     <div th:if="${admissions.empty}">

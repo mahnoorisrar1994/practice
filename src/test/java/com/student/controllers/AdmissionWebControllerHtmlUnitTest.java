@@ -65,11 +65,11 @@ class AdmissionWebControllerHtmlUnitTest {
 		HtmlAnchor newStudentLink = page.getAnchorByHref("/newAdmission");
 		assertThat(newStudentLink).isNotNull();
 	}
-	
+
 	@Test
 	void test_HomePageWithAdmissions_ShouldShowThemInATable() throws Exception {
 		when(admissionService.readAllExistingAdmissions())
-				.thenReturn(asList(new Admission(1L, LocalDate.of(2021, 2, 2), "pending","bachelors"),
+				.thenReturn(asList(new Admission(1L, LocalDate.of(2021, 2, 2), "pending", "bachelors"),
 						new Admission(2L, LocalDate.of(2021, 4, 2), "approved", "masters")));
 
 		HtmlPage page = this.webClient.getPage("/admissions");
@@ -78,6 +78,7 @@ class AdmissionWebControllerHtmlUnitTest {
 		page.getAnchorByHref("/editAdmission/2");
 
 	}
+
 	@Test
 	void test_EditNonExistentAdmission() throws Exception {
 		when(admissionService.findAdmissionById(1L)).thenReturn(null);
@@ -90,29 +91,28 @@ class AdmissionWebControllerHtmlUnitTest {
 
 	@Test
 	void test_EditExistentAdmission() throws Exception {
-	    Admission firstAdmission = new Admission(1L, LocalDate.of(2021, 2, 2), "pending", "bachelors");
-	    when(admissionService.findAdmissionById(1)).thenReturn(firstAdmission);
 
-	    HtmlPage page = this.webClient.getPage("/editAdmission/1");
+		Admission firstAdmission = new Admission(1L, LocalDate.of(2021, 2, 2), "pending", "bachelors");
+		when(admissionService.findAdmissionById(1L)).thenReturn(firstAdmission);
 
-	    final HtmlForm form = page.getFormByName("admission_record");
+		HtmlPage page = this.webClient.getPage("/editAdmission/1");
 
-	    form.getInputByName("admissionDate").setValueAttribute("2021-02-02");
-	    form.getInputByName("status").setValueAttribute("pending");
+		final HtmlForm form = page.getFormByName("admission_record");
 
-	    // Interact with the select element for the course
-	    HtmlSelect courseSelect = form.getSelectByName("course");
-	    courseSelect.setSelectedAttribute("Bachelors", true);
+		form.getInputByName("admissionDate").setValueAttribute("2021-02-02");
 
-	    HtmlButton submitButton = (HtmlButton) form.getButtonByName("btn_submit");
-	    HtmlPage resultPage = submitButton.click();
+		HtmlSelect statusSelect = form.getSelectByName("status");
+		statusSelect.setSelectedAttribute("pending", true);
 
-	    assertThat(resultPage.getUrl().toString()).endsWith("/admissions");
+		HtmlSelect courseSelect = form.getSelectByName("course");
+		courseSelect.setSelectedAttribute("Bachelors", true);
 
-	    verify(admissionService).updateAdmissionInformation(eq(1L), any(Admission.class));
+		HtmlButton submitButton = (HtmlButton) form.getButtonByName("btn_submit");
+		HtmlPage resultPage = submitButton.click();
+
+		assertThat(resultPage.getUrl().toString()).endsWith("/admissions");
+
+		verify(admissionService).updateAdmissionInformation(eq(1L), any(Admission.class));
 	}
-
-
-	
 
 }

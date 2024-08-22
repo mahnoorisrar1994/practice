@@ -23,7 +23,7 @@ public class StudentWebController {
 
 	@Autowired
 	private StudentService studentService;
-	
+
 	@Autowired
 	private AdmissionService admissionService;
 
@@ -37,23 +37,31 @@ public class StudentWebController {
 	}
 
 	@GetMapping("/edit/{id}")
-	public String editStudent(@PathVariable long id, Model model) {
+	public String showEditStudentForm(@PathVariable Long id, Model model) {
+		Student student = studentService.findStudentById(id);
 		List<Admission> admissions = admissionService.readAllExistingAdmissions();
-		Student studentById = studentService.findStudentById(id);
-		model.addAttribute("student", studentById);
 		model.addAttribute("admissions", admissions);
-		model.addAttribute(MESSAGE_ATTRIBUTE, studentById == null ? "No student found with id: " + id : "");
-		return EDIT;
+
+		if (student == null) {
+			model.addAttribute(MESSAGE_ATTRIBUTE, "No student found with id: " + id);
+			model.addAttribute("student", null);
+		} else {
+			model.addAttribute("student", student);
+			model.addAttribute(MESSAGE_ATTRIBUTE, "");
+		}
+
+		return "edit";
 	}
 
 	@GetMapping("/new")
 	public String newStudent(Model model) {
-	    List<Admission> admissions = admissionService.readAllExistingAdmissions();
-	    System.out.println("Admissions found: " + admissions.size());
-	    model.addAttribute("admissions", admissions);
-	    model.addAttribute("message", "");
-	    model.addAttribute("student", new Student());
-	    return "edit";
+		List<Admission> admissions = admissionService.readAllExistingAdmissions();
+		System.out.println("Admissions found: " + admissions.size());
+		model.addAttribute("admissions", admissions);
+		model.addAttribute(MESSAGE_ATTRIBUTE, "");
+		Student student = new Student();
+		model.addAttribute("student", student);
+		return EDIT;
 	}
 
 	@PostMapping("/save")
@@ -69,9 +77,9 @@ public class StudentWebController {
 
 	@GetMapping("/delete/{id}")
 	public String deleteStudent(@PathVariable Long id, Model model) {
-	    studentService.deleteStudentById(id);
-	    model.addAttribute("message", "Student with ID " + id + " has been deleted.");
-	    return "/delete";
+		studentService.deleteStudentById(id);
+		model.addAttribute(MESSAGE_ATTRIBUTE, "Student with ID " + id + " has been deleted.");
+		return "/delete";
 	}
 
 }

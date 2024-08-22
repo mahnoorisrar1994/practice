@@ -17,20 +17,29 @@
 		<form name="admission_record" action="#" th:action="@{/saveAdmission}" th:object="${admission}" method="post">
 			<!-- Hidden field for the Admissions's identifier -->
 			<input type="hidden" th:field="*{id}" />
+			
 			<p>
-				Admission Date: <input type="text" th:field="*{admissionDate}" />
-			</p>
-			<p>
-				Status: <input type="text" th:field="*{status}" />
-			</p>
-			<p>
-    Course: 
-    <select th:field="*{course}" required>
-        <option value="">Select a Course</option>
-        <option value="Bachelors">Bachelors</option>
-        <option value="Masters">Masters</option>
-    </select>
-</p>
+                Admission Date: <input type="date" th:field="*{admissionDate}" />
+            </p>
+
+            <p>
+                Status: 
+                <select th:field="*{status}" required>
+                   <option value="">Select a Status</option>
+                   <option value="Pending">Pending</option>
+                   <option value="Approved">Approved</option>
+                   <option value="Rejected">Rejected</option>
+                </select>
+            </p>
+
+            <p>
+                Course: 
+                <select th:field="*{course}" required>
+                   <option value="">Select a Course</option>
+                   <option value="Bachelors">Bachelors</option>
+                   <option value="Masters">Masters</option>
+                </select>
+            </p>
 
 			
 			<button type="submit" name="btn_submit">Save</button>
@@ -38,3 +47,4 @@
 	</div>
 </body>
 </html>
+

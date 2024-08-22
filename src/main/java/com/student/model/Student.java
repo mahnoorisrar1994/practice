@@ -4,12 +4,13 @@ package com.student.model;
 import java.util.Objects;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
+import javax.persistence.ManyToOne;
 
 
 @Entity
@@ -20,12 +21,14 @@ public class Student {
 		private Long id;
 	    private String firstName;
 	    private String lastName;
+		@Column(unique = true)
 	    private String email;
 	    
 	    
-	    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
-	    @JoinColumn(name = "admission_id")  // Foreign key in the Student table
+		@ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+		@JoinColumn(name = "admission_id", nullable = false) // Foreign key 
 	    private Admission admission;
+	    
 	    
 		public Student(Long id, String firstName, String lastName, String email, Admission admission) {
 			super();

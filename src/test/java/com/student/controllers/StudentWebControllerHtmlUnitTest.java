@@ -79,6 +79,7 @@ class StudentWebControllerHtmlUnitTest {
 
 		assertThat(page.getBody().getTextContent()).contains("No student found with id: 1");
 
+		assertThat(page.getForms().size()).isEqualTo(0);
 	}
 
 	@Test
@@ -110,7 +111,7 @@ class StudentWebControllerHtmlUnitTest {
 		doNothing().when(studentService).deleteStudentById(1L);
 
 		HtmlPage page = webClient.getPage("/delete/1");
-		
+
 		verify(studentService, times(1)).deleteStudentById(1L);
 
 		String pageContent = page.getBody().getTextContent();

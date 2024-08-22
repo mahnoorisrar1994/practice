@@ -14,6 +14,10 @@ import com.student.services.AdmissionService;
 
 @Controller
 public class AdmissionWebController {
+	
+	private static final String MESSAGE_ATTRIBUTE = "message";
+	private static final String INDEX = "admission_index";
+	private static final String EDIT = "edit_admission";
 
 	@Autowired
 	private AdmissionService admissionService;
@@ -22,23 +26,23 @@ public class AdmissionWebController {
 	public String index(Model model) {
 		List<Admission> admissions = admissionService.readAllExistingAdmissions();
 		model.addAttribute("admissions", admissions);
-		model.addAttribute("message", admissions.isEmpty() ? "No admission is presented" : "");
-		return "admission_index";
+		model.addAttribute(MESSAGE_ATTRIBUTE, admissions.isEmpty() ? "No admission is presented" : "");
+		return INDEX;
 	}
 	
 	@GetMapping("/editAdmission/{id}")
 	public String editStudent(@PathVariable long id, Model model) {
 		Admission admissionById = admissionService.findAdmissionById(id);
 		model.addAttribute("admission", admissionById);
-		model.addAttribute("message", admissionById == null ? "No admission found with id: " + id : "");
-		return "edit_admission";
+		model.addAttribute(MESSAGE_ATTRIBUTE, admissionById == null ? "No admission found with id: " + id : "");
+		return EDIT;
 	}
 
 	@GetMapping("/newAdmission")
 	public String showNewAdmissionRecord(Model model) {
-		model.addAttribute("message", "");
+		model.addAttribute(MESSAGE_ATTRIBUTE, "");
 		model.addAttribute("admission", new Admission());
-		return "edit_admission";
+		return EDIT;
 	}
 
 	@PostMapping("/saveAdmission")
@@ -57,7 +61,7 @@ public class AdmissionWebController {
 	@GetMapping("/deleteAdmission/{id}")
 	public String deleteAdmission(@PathVariable Long id, Model model) {
 	    admissionService.deleteAdmissionById(id);
-	    model.addAttribute("message", "Admission with ID " + id + " has been deleted.");
+	    model.addAttribute(MESSAGE_ATTRIBUTE, "Admission with ID " + id + " has been deleted.");
 	    return "/delete_admission";
 	}
 

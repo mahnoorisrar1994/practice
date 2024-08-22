@@ -8,7 +8,10 @@
 
 <body>
     <div>
-		<a th:href="@{/new}">New student</a>
+		<p><a th:href="@{/new}">New Student</a></p>
+		<p><a th:href="@{/newAdmission}">New Admission</a></p>
+		<p><a th:href="@{/}">All Students</a></p>
+		<p><a th:href="@{/admissions}">All Admissions</a></p>
 	</div>
 	<!-- IF NO STUDENT -->
 	<div th:if="${students.empty}">
@@ -34,7 +37,7 @@
 					<td th:text="${student.firstName}"></td>
 					<td th:text="${student.lastName}"></td>
 					<td th:text="${student.email}"></td>
-					<td th:text="${student.admission.status}"></td>
+					<td th:text="${student.admission.course}"></td>
 					<td><a th:href="@{'/edit/' + ${student.id}}">Edit</a></td>
 					<td><a th:id="'delete_student' + ${student.id}"
 							th:href="@{'/delete/' + ${student.id}}">Delete</a></td>

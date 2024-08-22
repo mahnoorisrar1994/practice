@@ -8,12 +8,12 @@
 	<h1>Edit Student</h1>
 
 	<!-- Displaying a message if present -->
-	<div th:unless="${message.empty}">
+	<div th:if="${message}">
 		<span th:text="${message}"></span>
 	</div>
 
-	<!-- Displaying the form if no message -->
-	<div th:if="${message.empty}">
+	<!-- Displaying the form if student is not null -->
+	<div th:if="${student != null}">
 		<form name="student_record" action="#" th:action="@{/save}" th:object="${student}" method="post">
 			<!-- Hidden field for the Student's identifier -->
 			<input type="hidden" th:field="*{id}" />
@@ -30,15 +30,15 @@
 
 			<!-- Dropdown for selecting an Admission -->
 			<p>
-				Admission: 
-				<select th:field="*{admission}" required>
-					<option value="">Select an Admission</option>
-					<option th:each="admission : ${admissions}" 
-							th:value="${admission.id}" 
-							th:text="${admission.admissionDate + ' (' + admission.status + ')'}">
-					</option>
-				</select>
-			</p>
+                Admission: 
+                <select th:field="*{admission}" required>
+                  <option value="">Select an Admission</option>
+                  <option th:each="admission : ${admissions}" 
+                          th:value="${admission.id}" 
+                          th:text="${#temporals.format(admission.admissionDate, 'yyyy-MM-dd') + ' (' + (admission.status ?: 'No Status') + ') (' + (admission.course ?: 'No Course') + ')'}">
+                  </option>
+                </select>
+            </p>
 			
 			<button type="submit" name="btn_submit">Save</button>
 		</form>
