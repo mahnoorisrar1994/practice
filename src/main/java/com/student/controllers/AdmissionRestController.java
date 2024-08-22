@@ -46,6 +46,8 @@ public class AdmissionRestController {
 		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 	}
 
+
+
 	@PutMapping("updateAdmission/{id}")
 	public ResponseEntity<Admission> updateAdmission(@PathVariable Long id, @RequestBody Admission admission) {
 		Admission updatedAdmission = admissionService.updateAdmissionInformation(id, admission);
