@@ -69,5 +69,18 @@ class AdmissionWebControllerIT {
 				"Admission deleted");
 
 	}
+	@Test
+	void test_ShowNewAdmissionForm() {
+	    driver.get(baseUrl + "/newAdmission");
+	    driver.findElement(By.name("admissionDate")).sendKeys("2021-02-02");
+	    driver.findElement(By.name("status")).sendKeys("pending");
+	    driver.findElement(By.name("course")).sendKeys("bachelors");
+
+	    driver.findElement(By.name("btn_submit")).click();
+
+	    String currentUrl = driver.getCurrentUrl();
+	    assertThat(currentUrl).isEqualTo(baseUrl + "/saveAdmission"); 
+	    
+	}
 
 }
