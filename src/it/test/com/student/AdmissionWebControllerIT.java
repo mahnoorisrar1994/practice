@@ -10,7 +10,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
 import org.openqa.selenium.htmlunit.HtmlUnitDriver;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -19,9 +18,6 @@ import org.springframework.boot.web.server.LocalServerPort;
 
 import com.student.model.Admission;
 import com.student.repositories.AdmissionRepository;
-import com.webApp.realEstate.model.Owner;
-import com.webApp.realEstate.model.Property;
-
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 class AdmissionWebControllerIT {
