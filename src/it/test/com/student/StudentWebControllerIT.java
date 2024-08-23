@@ -83,7 +83,7 @@ class StudentWebControllerIT {
 		driver.get(baseUrl + "/delete/" + testStudent.getId());
 
 		assertFalse(studentRepository.findById(testStudent.getId()).isPresent(),
-				"Student should not exist after deletion");
+				"Student deleted");
 
 	}
 

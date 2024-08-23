@@ -1,6 +1,7 @@
 package com.student;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
 import java.time.LocalDate;
 
@@ -16,7 +17,7 @@ import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.web.server.LocalServerPort;
 
 import com.student.model.Admission;
-
+import com.student.model.Student;
 import com.student.repositories.AdmissionRepository;
 
 
@@ -56,6 +57,17 @@ class AdmissionWebControllerIT {
 		assertThat(driver.findElement(By.id("admission_record")).getText()).contains("2021-02-02", "pending", "bachelors", "Edit", "Delete");
 
 		driver.findElement(By.cssSelector("a[href*='/editAdmission/" + admission.getId() + "']"));
+	}
+	@Test
+	void test_DeleteAdmission() throws Exception {
+		Admission admission = admissionRepository
+				.save(new Admission(null, LocalDate.of(2021, 02, 2), "pending", "bachelors"));
+
+		driver.get(baseUrl + "/deleteAdmission/" + admission.getId());
+
+		assertFalse(admissionRepository.findById(admission.getId()).isPresent(),
+				"Admission deleted");
+
 	}
 
 }
