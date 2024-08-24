@@ -6,4 +6,4 @@
 [![Reliability Rating](https://sonarcloud.io/api/project_badges/measure?project=Hamza1669_Student_Admission_TDD&metric=reliability_rating)](https://sonarcloud.io/summary/new_code?id=Hamza1669_Student_Admission_TDD)
 [![Vulnerabilities](https://sonarcloud.io/api/project_badges/measure?project=Hamza1669_Student_Admission_TDD&metric=vulnerabilities)](https://sonarcloud.io/summary/new_code?id=Hamza1669_Student_Admission_TDD)
 [![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=Hamza1669_Student_Admission_TDD&metric=sqale_rating)](https://sonarcloud.io/summary/new_code?id=Hamza1669_Student_Admission_TDD)
-
+[![Java CI with Maven](https://github.com/Hamza1669/Student_Admission_TDD/actions/workflows/maven.yml/badge.svg)](https://github.com/Hamza1669/Student_Admission_TDD/actions/workflows/maven.yml)
