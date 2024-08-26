@@ -1,6 +1,7 @@
 package com.student;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static io.restassured.RestAssured.given;
 
@@ -60,17 +61,49 @@ public class StudentRestControllerIT {
 	void test() {
 		assertTrue(postgreSQLContainer.isRunning());
 	}
-	
+
 	@Test
 	void test_createStudent() {
 		Admission admission = new Admission(null, LocalDate.of(2021, 02, 2), "pending", "bachelors");
 		Response response = given().contentType(MediaType.APPLICATION_JSON_VALUE)
-				.body(new Student(null, "Hamza","Khan", "Hamzakhan1@gmail.com", admission)).when().post("/api/students/newStudent");
+				.body(new Student(null, "Hamza", "Khan", "Hamzakhan1@gmail.com", admission)).when()
+				.post("/api/students/newStudent");
 
 		Student saved = response.getBody().as(Student.class);
 		assertThat(studentRepository.findById(saved.getId())).contains(saved);
 	}
 
+	@Test
+	void test_DeleteStudent() {
+		Admission admission = new Admission(null, LocalDate.of(2021, 02, 2), "pending", "bachelors");
+		Student savedStudent = new Student(null, "Hamza", "Khan", "Hamzakhan1@gmail.com", admission);
+		savedStudent = studentRepository.save(savedStudent);
 
+		given().when().delete("/api/students/deleteStudent/" + savedStudent.getId()).then().statusCode(204);
+
+		assertThat(studentRepository.findById(savedStudent.getId())).isEmpty();
+	}
+
+	@Test
+	void testUpdateEmployee() throws Exception {
+
+		Admission admission = new Admission(null, LocalDate.of(2021, 02, 2), "pending", "bachelors");
+		Student savedStudent = new Student(null, "Hamza", "Khan", "Hamzakhan1@gmail.com", admission);
+		savedStudent = studentRepository.save(savedStudent);
+
+		Student updatedStudent = new Student(savedStudent.getId(), "Modified Name", "Khan", "Hamzakhan1@gmail.com",
+				admission);
+
+		Student responseBody = given().contentType(MediaType.APPLICATION_JSON_VALUE).body(updatedStudent).when()
+				.put("/api/students/updateStudent/" + savedStudent.getId()).then().statusCode(200)
+
+				.extract().as(Student.class);
+
+		assertEquals(savedStudent.getId().intValue(), responseBody.getId().intValue());
+		assertEquals("Modified Name", responseBody.getFirstName());
+		assertEquals(savedStudent.getLastName(), responseBody.getLastName());
+		assertEquals(savedStudent.getEmail(), responseBody.getEmail());
+		assertEquals(savedStudent.getAdmission(), responseBody.getAdmission());
+	}
 
 }
