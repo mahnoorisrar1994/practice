@@ -85,7 +85,7 @@ public class StudentRestControllerIT {
 	}
 
 	@Test
-	void testUpdateEmployee() throws Exception {
+	void test_UpdateStudent() throws Exception {
 
 		Admission admission = new Admission(null, LocalDate.of(2021, 02, 2), "pending", "bachelors");
 		Student savedStudent = new Student(null, "Hamza", "Khan", "Hamzakhan1@gmail.com", admission);

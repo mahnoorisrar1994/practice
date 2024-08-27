@@ -1,6 +1,7 @@
 package com.student;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static io.restassured.RestAssured.given;
 
@@ -70,7 +71,35 @@ public class AdmissionRestControllerIT {
 		assertThat(admissionRepository.findById(saved.getId())).contains(saved);
 	}
 
+	@Test
+	void test_UpdateAdmission() throws Exception {
 
+		Admission admission = new Admission(null, LocalDate.of(2021, 02, 2), "pending", "bachelors");
 
+		admission = admissionRepository.save(admission);
+
+		Admission updatedAdmission = new Admission(admission.getId(), LocalDate.of(2021, 02, 2), "modified status",
+				"bachelors");
+
+		Admission responseBody = given().contentType(MediaType.APPLICATION_JSON_VALUE).body(updatedAdmission).when()
+				.put("/api/admissions/updateAdmission/" + admission.getId()).then().statusCode(200)
+
+				.extract().as(Admission.class);
+
+		assertEquals(admission.getId().intValue(), responseBody.getId().intValue());
+		assertEquals(admission.getAdmissionDate(), responseBody.getAdmissionDate());
+		assertEquals("modified status", responseBody.getStatus());
+		assertEquals(admission.getCourse(), responseBody.getCourse());
+	}
+
+	@Test
+	void test_DeleteAdmission() {
+		Admission admission = new Admission(null, LocalDate.of(2021, 02, 2), "pending", "bachelors");
+		admission = admissionRepository.save(admission);
+
+		given().when().delete("/api/admissions/deleteAdmission/" + admission.getId()).then().statusCode(204);
+
+		assertThat(admissionRepository.findById(admission.getId())).isEmpty();
+	}
 
 }
