@@ -46,15 +46,12 @@ public class AdmissionWebController {
 	}
 
 	@PostMapping("/saveAdmission")
-	public String saveAdmission(@ModelAttribute Admission admission, BindingResult result) {
-	    if (result.hasErrors()) {
-	        // Log the errors to understand what's going wrong
-	        result.getAllErrors().forEach(error -> System.out.println(error.toString()));
-	        return EDIT; // Stay on the same page if there's an error
-	    }
+	public String saveAdmission(Admission admission) {
 	    if (admission.getId() != null) {
+	        // If the ID is not null, update the existing admission
 	        admissionService.updateAdmissionInformation(admission.getId(), admission);
 	    } else {
+	        // If the ID is null, create a new admission
 	        admissionService.createNewAdmissionDetails(admission);
 	    }
 	    return "redirect:/admissions";
