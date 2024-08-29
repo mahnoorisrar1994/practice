@@ -46,5 +46,20 @@ public class AdmissionWebControllerE2E {
 		driver.get(baseUrl);
 		driver.findElement(By.cssSelector("a[href*='/admissions"));
 	}
+	
+	@Test
+	void test_CreateAdmission() {
+		driver.get(baseUrl + "/newAdmission");
+
+		driver.findElement(By.name("admissionDate")).sendKeys("20-02-2024");
+		driver.findElement(By.name("status")).sendKeys("Approved");
+		driver.findElement(By.name("course")).sendKeys("Masters");
+		driver.findElement(By.name("btn_submit")).click();
+
+
+		driver.get(baseUrl + "/admissions");
+		assertThat(driver.findElement(By.id("admission_record")).getText()).
+		contains("2024-02-20","Approved", "Masters");
+	}
 
 }
