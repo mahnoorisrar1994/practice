@@ -51,7 +51,7 @@ public class AdmissionWebControllerE2E {
 	void test_CreateAdmission() {
 		driver.get(baseUrl + "/newAdmission");
 
-		driver.findElement(By.name("admissionDate")).sendKeys("20-02-2024");
+		driver.findElement(By.name("admissionDate")).sendKeys("2024-02-20");
 		driver.findElement(By.name("status")).sendKeys("Approved");
 		driver.findElement(By.name("course")).sendKeys("Masters");
 		driver.findElement(By.name("btn_submit")).click();
