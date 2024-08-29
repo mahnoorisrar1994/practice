@@ -18,11 +18,7 @@ jobs:
   build:
 
     runs-on: ubuntu-latest
-
-    env:
-      LANG: en_US.UTF-8
-      LC_ALL: en_US.UTF-8
-
+    
     steps:
     - uses: actions/checkout@v4
     - name: Set up JDK 17
@@ -31,17 +27,6 @@ jobs:
         java-version: '17'
         distribution: 'temurin'
         cache: maven
-    - name: Set timezone
-      run: |
-        sudo timedatectl set-timezone "America/New_York"  # Replace with your local timezone
-    - name: Set up ChromeDriver
-      uses: browser-actions/setup-chromedriver@v1
-      with:
-        version: 'latest'  # Match with your local ChromeDriver version
-    - name: Set up Chrome
-      uses: browser-actions/setup-chrome@v1
-      with:
-        version: 'latest'
     - name: Build with Maven
       run: mvn -B package --file pom.xml
 
