@@ -1,6 +1,7 @@
 package com.student;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
@@ -8,12 +9,12 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import io.github.bonigarcia.wdm.WebDriverManager;
 
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
-import java.time.Duration;
+import org.openqa.selenium.JavascriptExecutor;
+
 
 public class AdmissionWebControllerE2E {
 
@@ -49,17 +50,26 @@ public class AdmissionWebControllerE2E {
 	
 	@Test
 	void test_CreateAdmission() {
-		driver.get(baseUrl + "/newAdmission");
+	    driver.get(baseUrl + "/newAdmission");
 
-		driver.findElement(By.name("admissionDate")).sendKeys("2024-02-20");
-		driver.findElement(By.name("status")).sendKeys("Approved");
-		driver.findElement(By.name("course")).sendKeys("Masters");
-		driver.findElement(By.name("btn_submit")).click();
+	    JavascriptExecutor jsExecutor = (JavascriptExecutor) driver;
+	    
+	    WebElement dateField = driver.findElement(By.name("admissionDate"));
+	    jsExecutor.executeScript("arguments[0].value='2024-02-20';", dateField);
+	    
+	    driver.findElement(By.name("status")).sendKeys("Approved");
+	    driver.findElement(By.name("course")).sendKeys("Masters");
+	    driver.findElement(By.name("btn_submit")).click();
 
-
-		driver.get(baseUrl + "/admissions");
-		assertThat(driver.findElement(By.id("admission_record")).getText()).
-		contains("2024-02-20","Approved", "Masters");
+	    driver.get(baseUrl + "/admissions");
+	    assertThat(driver.findElement(By.id("admission_record")).getText())
+	        .contains("2024-02-20", "Approved", "Masters");
 	}
 
+
+
+	
+	
 }
+
+
