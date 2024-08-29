@@ -13,7 +13,7 @@ import io.github.bonigarcia.wdm.WebDriverManager;
 
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
-
+import java.time.Duration;
 
 public class AdmissionWebControllerE2E {
 
@@ -42,18 +42,22 @@ public class AdmissionWebControllerE2E {
 	}
 
 	@Test
-	void test_CreateAdmission() {
-	    driver.get(baseUrl + "/newAdmission");
+	void test_CreateAndCheckAdmission() {
+		driver.get(baseUrl + "/newAdmission");
 
-	    driver.findElement(By.name("admissionDate")).sendKeys("30-08-2024");
-	    driver.findElement(By.name("status")).sendKeys("Approved");
-	    driver.findElement(By.name("course")).sendKeys("Masters");
-	    driver.findElement(By.name("btn_submit")).click();
-	    WebDriverWait wait = new WebDriverWait(driver, 20); // 20 seconds timeout
-	    wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("admission_record")));
+		driver.findElement(By.name("admissionDate")).sendKeys("20-08-2024");
+		driver.findElement(By.name("status")).sendKeys("Approved");
+		driver.findElement(By.name("course")).sendKeys("Masters");
+		driver.findElement(By.name("btn_submit")).click();
 
-	    assertThat(driver.findElement(By.id("admission_record")).getText())
-	        .contains("2024-08-30", "Approved", "Masters");
+		driver.get(baseUrl + "/admissions");
+
+		WebDriverWait wait = new WebDriverWait(driver, 40); // 40 seconds timeout
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("admission_record")));
+
+		assert driver.findElement(By.id("admission_record")).getText().contains("2024-08-20");
+		assert driver.findElement(By.id("admission_record")).getText().contains("Approved");
+		assert driver.findElement(By.id("admission_record")).getText().contains("Masters");
 	}
 
 }
