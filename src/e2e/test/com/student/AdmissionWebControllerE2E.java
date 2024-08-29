@@ -10,7 +10,9 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import io.github.bonigarcia.wdm.WebDriverManager;
-import java.util.concurrent.TimeUnit;
+
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 
 public class AdmissionWebControllerE2E {
@@ -30,9 +32,6 @@ public class AdmissionWebControllerE2E {
 		baseUrl = "http://localhost:" + port;
 		driver = new ChromeDriver();
 
-		// Set the implicit wait time to 10 seconds
-		driver.manage().timeouts().implicitlyWait(20, TimeUnit.SECONDS);
-
 	}
 
 	@AfterAll
@@ -42,20 +41,19 @@ public class AdmissionWebControllerE2E {
 		}
 	}
 
-	  @Test
-	    void test_CreateAdmission() {
-	        // Navigate to the new admission page
-	        driver.get(baseUrl + "/newAdmission");
+	@Test
+	void test_CreateAdmission() {
+	    driver.get(baseUrl + "/newAdmission");
 
-	        // Fill out the form
-	        driver.findElement(By.name("admissionDate")).sendKeys("29-08-2024");
-	        driver.findElement(By.name("status")).sendKeys("Approved");
-	        driver.findElement(By.name("course")).sendKeys("Masters");
-	        driver.findElement(By.name("btn_submit")).click();
+	    driver.findElement(By.name("admissionDate")).sendKeys("30-08-2024");
+	    driver.findElement(By.name("status")).sendKeys("Approved");
+	    driver.findElement(By.name("course")).sendKeys("Masters");
+	    driver.findElement(By.name("btn_submit")).click();
+	    WebDriverWait wait = new WebDriverWait(driver, 20); // 20 seconds timeout
+	    wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("admission_record")));
 
-	        // Assert that the admission record contains the expected values
-	        assertThat(driver.findElement(By.id("admission_record")).getText())
-	            .contains("2024-08-29", "Approved", "Masters");
-	    }
+	    assertThat(driver.findElement(By.id("admission_record")).getText())
+	        .contains("2024-08-30", "Approved", "Masters");
+	}
 
 }
