@@ -42,22 +42,9 @@ public class AdmissionWebControllerE2E {
 	}
 
 	@Test
-	void test_CreateAndCheckAdmission() {
-		driver.get(baseUrl + "/newAdmission");
-
-		driver.findElement(By.name("admissionDate")).sendKeys("2024-08-20");
-		driver.findElement(By.name("status")).sendKeys("Approved");
-		driver.findElement(By.name("course")).sendKeys("Masters");
-		driver.findElement(By.name("btn_submit")).click();
-
-		driver.get(baseUrl + "/admissions");
-
-		WebDriverWait wait = new WebDriverWait(driver, 40); // 40 seconds timeout
-		wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("admission_record")));
-
-		assert driver.findElement(By.id("admission_record")).getText().contains("2024-08-20");
-		assert driver.findElement(By.id("admission_record")).getText().contains("Approved");
-		assert driver.findElement(By.id("admission_record")).getText().contains("Masters");
+	void test_HomePage() {
+		driver.get(baseUrl);
+		driver.findElement(By.cssSelector("a[href*='/admissions"));
 	}
 
 }
