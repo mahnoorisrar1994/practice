@@ -31,6 +31,17 @@ jobs:
         java-version: '17'
         distribution: 'temurin'
         cache: maven
+    - name: Set timezone
+      run: |
+        sudo timedatectl set-timezone "America/New_York"  # Replace with your local timezone
+    - name: Set up ChromeDriver
+      uses: browser-actions/setup-chromedriver@v1
+      with:
+        version: 'latest'  # Match with your local ChromeDriver version
+    - name: Set up Chrome
+      uses: browser-actions/setup-chrome@v1
+      with:
+        version: 'latest'
     - name: Build with Maven
       run: mvn -B package --file pom.xml
 
@@ -66,3 +77,5 @@ jobs:
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
     - name: E2E tests
       run: xvfb-run mvn verify -Pe2e-tests
+      env:
+        DISPLAY: :99 
