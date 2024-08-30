@@ -20,12 +20,17 @@ public class StudentWebController {
 	private static final String MESSAGE_ATTRIBUTE = "message";
 	private static final String INDEX = "index";
 	private static final String EDIT = "edit";
+	private static final String STUDENT = "student";
 
 	@Autowired
 	private StudentService studentService;
+	
+	private final AdmissionService admissionService;
 
-	@Autowired
-	private AdmissionService admissionService;
+	public StudentWebController(AdmissionService admissionService) {
+	    this.admissionService = admissionService;
+	}
+
 
 	@GetMapping("/")
 	public String index(Model model) {
@@ -44,9 +49,9 @@ public class StudentWebController {
 
 		if (student == null) {
 			model.addAttribute(MESSAGE_ATTRIBUTE, "No student found with id: " + id);
-			model.addAttribute("student", null);
+			model.addAttribute(STUDENT, null);
 		} else {
-			model.addAttribute("student", student);
+			model.addAttribute(STUDENT, student);
 			model.addAttribute(MESSAGE_ATTRIBUTE, "");
 		}
 
@@ -56,11 +61,11 @@ public class StudentWebController {
 	@GetMapping("/new")
 	public String newStudent(Model model) {
 		List<Admission> admissions = admissionService.readAllExistingAdmissions();
-		System.out.println("Admissions found: " + admissions.size());
+		//System.out.println("Admissions found: " + admissions.size());
 		model.addAttribute("admissions", admissions);
 		model.addAttribute(MESSAGE_ATTRIBUTE, "");
 		Student student = new Student();
-		model.addAttribute("student", student);
+		model.addAttribute(STUDENT, student);
 		return EDIT;
 	}
 
