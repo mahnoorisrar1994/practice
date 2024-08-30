@@ -59,18 +59,34 @@ public class AdmissionWebControllerE2E {
 		WebElement dateField = driver.findElement(By.name("admissionDate"));
 		jsExecutor.executeScript("arguments[0].value='2024-02-20';", dateField);
 
-		WebElement statusField = driver.findElement(By.name("status"));
-		statusField.sendKeys("Approved");
-
-		WebElement courseField = driver.findElement(By.name("course"));
-		courseField.sendKeys("Masters");
-
+		driver.findElement(By.name("status")).sendKeys("Approved");
+		driver.findElement(By.name("course")).sendKeys("Masters");
 		driver.findElement(By.name("btn_submit")).click();
 
 		driver.get(baseUrl + "/admissions");
 
 		WebElement admissionRecord = driver.findElement(By.id("admission_record"));
 		assertThat(admissionRecord.getText()).contains("2024-02-20", "Approved", "Masters");
+	}
+	
+	@Test
+	void test_DeleteAdmission() {
+		driver.get(baseUrl + "/newAdmission");
+
+		
+		JavascriptExecutor jsExecutor = (JavascriptExecutor) driver;
+
+		WebElement dateField = driver.findElement(By.name("admissionDate"));
+		jsExecutor.executeScript("arguments[0].value='2024-02-21';", dateField);
+		
+		driver.findElement(By.name("status")).sendKeys("Approved");
+		driver.findElement(By.name("course")).sendKeys("Masters");
+		driver.findElement(By.name("btn_submit")).click();
+		
+		WebElement admissionRecord = driver.findElement(By.id("admission_record"));
+		assertThat(admissionRecord.getText()).contains("2024-02-21", "Approved", "Masters");
+		
+		driver.findElement(By.cssSelector("a[href*='/deleteAdmission/']")).click();
 	}
 
 }
