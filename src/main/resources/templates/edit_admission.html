@@ -1,29 +1,28 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-	<meta charset="UTF-8" />
-	<title>Edit Admission</title>
+    <meta charset="UTF-8" />
+    <title>Edit Admission</title>
+    <!-- jQuery UI CSS for Datepicker -->
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
 </head>
 <body>
-	<h1>Edit Admission</h1>
+    <h1>Edit Admission</h1>
 
-	<!-- Displaying a message if present -->
-	<div th:unless="${message.empty}">
-		<span th:text="${message}"></span>
-	</div>
+    <!-- Displaying a message if present -->
+    <div th:unless="${message.empty}">
+        <span th:text="${message}"></span>
+    </div>
 
-	<!-- Displaying the form if no message -->
-	<div th:if="${message.empty}">
-		<form name="admission_record" action="#" th:action="@{/saveAdmission}" th:object="${admission}" method="post">
-			<!-- Hidden field for the Admissions's identifier -->
-			<input type="hidden" th:field="*{id}" />
-			
-			<p>
-                Admission Date: <input type="date" th:field="*{admissionDate}" />
-          
+    <!-- Displaying the form if no message -->
+    <div th:if="${message.empty}">
+        <form name="admission_record" action="#" th:action="@{/saveAdmission}" th:object="${admission}" method="post">
+            <!-- Hidden field for the Admissions's identifier -->
+            <input type="hidden" th:field="*{id}" />
+            
+            <p>
+                Admission Date: <input type="text" id="admissionDate" th:field="*{admissionDate}" />    
             </p>
-
-
             <p>
                 Status: 
                 <select th:field="*{status}" required>
@@ -43,10 +42,23 @@
                 </select>
             </p>
 
-			
-			<button type="submit" name="btn_submit">Save</button>
-		</form>
-	</div>
+            <button type="submit" name="btn_submit">Save</button>
+        </form>
+    </div>
+
+    <!-- jQuery and jQuery UI for Datepicker -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+
+    <script>
+        $(function() {
+            $("#admissionDate").datepicker({
+                dateFormat: 'yy-mm-dd', // Ensure this matches the format expected by your backend
+                changeMonth: true,
+                changeYear: true,
+                yearRange: "1900:2100"  // Adjust the year range as needed
+            });
+        });
+    </script>
 </body>
 </html>
-

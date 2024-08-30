@@ -1,5 +1,6 @@
 package com.student.controllers;
 
+
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,7 +45,7 @@ public class AdmissionWebController {
 		model.addAttribute("admission", new Admission());
 		return EDIT;
 	}
-
+	
 	@PostMapping("/saveAdmission")
 	public String saveAdmission(Admission admission) {
 	    if (admission.getId() != null) {
@@ -57,6 +58,7 @@ public class AdmissionWebController {
 	    return "redirect:/admissions";
 	}
 
+
 	
 	@GetMapping("/deleteAdmission/{id}")
 	public String deleteAdmission(@PathVariable Long id, Model model) {
@@ -64,5 +66,7 @@ public class AdmissionWebController {
 	    model.addAttribute(MESSAGE_ATTRIBUTE, "Admission with ID " + id + " has been deleted.");
 	    return "/delete_admission";
 	}
+	
+
 
 }

@@ -1,7 +1,7 @@
 package com.student;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+
 
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
@@ -11,6 +11,8 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
+
+
 import io.github.bonigarcia.wdm.WebDriverManager;
 
 import org.openqa.selenium.JavascriptExecutor;
@@ -47,29 +49,28 @@ public class AdmissionWebControllerE2E {
 		driver.get(baseUrl);
 		driver.findElement(By.cssSelector("a[href*='/admissions"));
 	}
-	
+
 	@Test
 	void test_CreateAdmission() {
-	    driver.get(baseUrl + "/newAdmission");
+		driver.get(baseUrl + "/newAdmission");
 
-	    JavascriptExecutor jsExecutor = (JavascriptExecutor) driver;
-	    
-	    WebElement dateField = driver.findElement(By.name("admissionDate"));
-	    jsExecutor.executeScript("arguments[0].value='2024-02-20';", dateField);
-	    
-	    driver.findElement(By.name("status")).sendKeys("Approved");
-	    driver.findElement(By.name("course")).sendKeys("Masters");
-	    driver.findElement(By.name("btn_submit")).click();
+		JavascriptExecutor jsExecutor = (JavascriptExecutor) driver;
 
-	    driver.get(baseUrl + "/admissions");
-	    assertThat(driver.findElement(By.id("admission_record")).getText())
-	        .contains("2024-02-20", "Approved", "Masters");
+		WebElement dateField = driver.findElement(By.name("admissionDate"));
+		jsExecutor.executeScript("arguments[0].value='2024-02-20';", dateField);
+
+		WebElement statusField = driver.findElement(By.name("status"));
+		statusField.sendKeys("Approved");
+
+		WebElement courseField = driver.findElement(By.name("course"));
+		courseField.sendKeys("Masters");
+
+		driver.findElement(By.name("btn_submit")).click();
+
+		driver.get(baseUrl + "/admissions");
+
+		WebElement admissionRecord = driver.findElement(By.id("admission_record"));
+		assertThat(admissionRecord.getText()).contains("2024-02-20", "Approved", "Masters");
 	}
 
-
-
-	
-	
 }
-
-

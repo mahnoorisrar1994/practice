@@ -50,6 +50,7 @@ public class AdmissionServiceImpl implements AdmissionService {
 
 	    admissionRepository.delete(existingAdmission);
 	}
+	
 
 
 }
