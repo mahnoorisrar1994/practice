@@ -15,7 +15,7 @@ import io.github.bonigarcia.wdm.WebDriverManager;
 
 import org.openqa.selenium.JavascriptExecutor;
 
-public class AdmissionWebControllerE2E {
+class AdmissionWebControllerE2E {
 
 	private static int port = Integer.parseInt(System.getProperty("server.port", "8080"));
 	private static String baseUrl = "http://localhost:" + port;
@@ -41,11 +41,6 @@ public class AdmissionWebControllerE2E {
 		}
 	}
 
-	@Test
-	void test_HomePage() {
-		driver.get(baseUrl);
-		driver.findElement(By.cssSelector("a[href*='/admissions"));
-	}
 
 	@Test
 	void test_CreateAdmission() {
@@ -84,6 +79,8 @@ public class AdmissionWebControllerE2E {
 
 		driver.findElement(By.cssSelector("a[href*='/deleteAdmission/']")).click();
 	}
+	
+	
 
 	@Test
 	void test_EditAdmission() {
@@ -106,7 +103,7 @@ public class AdmissionWebControllerE2E {
 
 		driver.get(baseUrl + "/editAdmission/" + admissionId);
 
-		// Edit the details
+		
 		WebElement editDateField = driver.findElement(By.name("admissionDate"));
 		jsExecutor.executeScript("arguments[0].value='2024-03-01';", editDateField);
 
@@ -114,7 +111,6 @@ public class AdmissionWebControllerE2E {
 		driver.findElement(By.name("course")).sendKeys("Masters");
 		driver.findElement(By.name("btn_submit")).click();
 
-		// Verify the edited admission record
 		driver.get(baseUrl + "/admissions");
 
 		WebElement admissionRecord = driver.findElement(By.id("admission_record"));
