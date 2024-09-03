@@ -43,7 +43,6 @@ public class AdmissionServiceImpl implements AdmissionService {
 	}
 	@Transactional
 	public void deleteAdmissionById(Long admissionId) {
-	    System.out.println("deleteAdmissionById called with id: " + admissionId);
 	    // Check if the student details available 
 	    Admission existingAdmission = admissionRepository.findById(admissionId)
 	            .orElseThrow(() -> new NoSuchElementException("Admission does not exist"));

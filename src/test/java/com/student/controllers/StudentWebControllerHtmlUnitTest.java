@@ -79,7 +79,7 @@ class StudentWebControllerHtmlUnitTest {
 
 		assertThat(page.getBody().getTextContent()).contains("No student found with id: 1");
 
-		assertThat(page.getForms().size()).isEqualTo(0);
+		assertThat(page.getForms().size()).isZero();
 	}
 
 	@Test

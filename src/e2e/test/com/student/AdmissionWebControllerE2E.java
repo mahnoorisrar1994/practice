@@ -36,10 +36,11 @@ class AdmissionWebControllerE2E {
 
 	@AfterAll
 	public static void teardown() {
-		if (driver != null) {
-			driver.quit();
-		}
+	    if (driver != null) {
+	        driver.quit();
+	    }
 	}
+
 
 
 	@Test

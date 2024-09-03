@@ -22,8 +22,14 @@ import java.util.NoSuchElementException;
 @RequestMapping("/api/students/")
 public class StudentRestController {
 
+	
+	private final StudentService studentService;
+
 	@Autowired
-	private StudentService studentService;
+	public StudentRestController(StudentService studentService) {
+	    this.studentService = studentService;
+	}
+
 
 	@GetMapping("allStudents")
 	public List<Student> allStudents() {

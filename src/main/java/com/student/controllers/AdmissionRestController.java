@@ -21,8 +21,12 @@ import com.student.services.AdmissionService;
 @RequestMapping("/api/admissions/")
 public class AdmissionRestController {
 
+	private final AdmissionService admissionService;
+
 	@Autowired
-	private AdmissionService admissionService;
+	public AdmissionRestController(AdmissionService admissionService) {
+		this.admissionService = admissionService;
+	}
 
 	@GetMapping("allAdmissions")
 	public List<Admission> allAdmission() {
@@ -45,8 +49,6 @@ public class AdmissionRestController {
 		admissionService.deleteAdmissionById(id);
 		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 	}
-
-
 
 	@PutMapping("updateAdmission/{id}")
 	public ResponseEntity<Admission> updateAdmission(@PathVariable Long id, @RequestBody Admission admission) {

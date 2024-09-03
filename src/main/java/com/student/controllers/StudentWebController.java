@@ -22,15 +22,14 @@ public class StudentWebController {
 	private static final String EDIT = "edit";
 	private static final String STUDENT = "student";
 
-	@Autowired
-	private StudentService studentService;
-	
-	private final AdmissionService admissionService;
+	private final StudentService studentService;
+    private final AdmissionService admissionService;
 
-	public StudentWebController(AdmissionService admissionService) {
-	    this.admissionService = admissionService;
-	}
-
+    @Autowired
+    public StudentWebController(StudentService studentService, AdmissionService admissionService) {
+        this.studentService = studentService;
+        this.admissionService = admissionService;
+    }
 
 	@GetMapping("/")
 	public String index(Model model) {
@@ -61,7 +60,7 @@ public class StudentWebController {
 	@GetMapping("/new")
 	public String newStudent(Model model) {
 		List<Admission> admissions = admissionService.readAllExistingAdmissions();
-		//System.out.println("Admissions found: " + admissions.size());
+
 		model.addAttribute("admissions", admissions);
 		model.addAttribute(MESSAGE_ATTRIBUTE, "");
 		Student student = new Student();

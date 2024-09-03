@@ -20,8 +20,12 @@ public class AdmissionWebController {
 	private static final String INDEX = "admission_index";
 	private static final String EDIT = "edit_admission";
 
-	@Autowired
-	private AdmissionService admissionService;
+	private final AdmissionService admissionService;
+
+    @Autowired
+    public AdmissionWebController(AdmissionService admissionService) {
+        this.admissionService = admissionService;
+    }
 
 	@GetMapping("/admissions")
 	public String index(Model model) {
