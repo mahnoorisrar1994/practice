@@ -83,5 +83,3 @@ jobs:
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
     - name: E2E tests
       run: xvfb-run mvn verify -Pe2e-tests
-      env:
-        DISPLAY: :99 
