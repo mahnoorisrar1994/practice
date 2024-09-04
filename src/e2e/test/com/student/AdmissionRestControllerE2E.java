@@ -7,7 +7,6 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-
 import static io.restassured.RestAssured.*;
 import static org.hamcrest.Matchers.*;
 
@@ -31,7 +30,7 @@ public class AdmissionRestControllerE2E {
 				""";
 
 		given().contentType(ContentType.JSON).body(newAdmissionJson).when().post("/api/admissions/newAdmission").then()
-				.statusCode(200); 
+				.statusCode(200);
 	}
 
 	@Test
@@ -41,6 +40,24 @@ public class AdmissionRestControllerE2E {
 				.contentType(ContentType.JSON).body("id", equalTo((int) admissionId))
 				.body("admissionDate", notNullValue()).body("status", notNullValue()).body("course", notNullValue());
 
+	}
+
+	@Test
+	void test_CreateNewAdmission() {
+		String newAdmissionJson = """
+				{
+				    "admissionDate": "2024-02-11",
+				    "status": "Approved",
+				    "course": "Masters"
+				}
+				""";
+
+		given().contentType(ContentType.JSON).body(newAdmissionJson).when().post("/api/admissions/newAdmission").then()
+				.statusCode(200) // Check if HTTP status code is 200
+				.contentType(ContentType.JSON) // Verify the response content type
+				.body("id", notNullValue()) // Verify that a new id is returned
+				.body("admissionDate", equalTo("2024-02-11")).body("status", equalTo("Approved"))
+				.body("course", equalTo("Masters"));
 	}
 
 }
