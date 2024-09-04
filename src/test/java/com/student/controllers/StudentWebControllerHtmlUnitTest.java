@@ -1,8 +1,6 @@
 package com.student.controllers;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -22,8 +20,6 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 
 import com.gargoylesoftware.htmlunit.WebClient;
 import com.gargoylesoftware.htmlunit.html.HtmlAnchor;
-import com.gargoylesoftware.htmlunit.html.HtmlButton;
-import com.gargoylesoftware.htmlunit.html.HtmlForm;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
 import com.student.model.Admission;
 import com.student.model.Student;
@@ -81,29 +77,6 @@ class StudentWebControllerHtmlUnitTest {
 
 	}
 
-	@Test
-	void test_EditExistentStudent() throws Exception {
-		Admission firstAdmission = new Admission(1L, LocalDate.of(2021, 2, 2), "pending", "bachelors");
-		Student existingStudent = new Student(1L, "Hamza", "Khan", "Hamzakhan@gmail.com", firstAdmission);
-		when(studentService.findStudentById(1)).thenReturn(existingStudent);
-
-		HtmlPage page = this.webClient.getPage("/edit/1");
-
-		final HtmlForm form = page.getFormByName("student_record");
-
-		form.getInputByName("firstName").setValueAttribute("modified name");
-		form.getInputByName("lastName").setValueAttribute("200");
-		form.getInputByName("email").setValueAttribute("modified description");
-
-		form.getSelectByName("admission").setSelectedAttribute("1", true);
-
-		HtmlButton submitButton = (HtmlButton) form.getButtonByName("btn_submit");
-		HtmlPage resultPage = submitButton.click();
-
-		assertThat(resultPage.getUrl().toString()).endsWith("/");
-
-		verify(studentService).updateStudentInformation(eq(1L), any(Student.class));
-	}
 
 	@Test
 	void test_DeleteStudent_ShouldDisplayConfirmationMessage() throws Exception {

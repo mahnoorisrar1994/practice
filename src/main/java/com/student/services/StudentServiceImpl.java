@@ -3,7 +3,6 @@ package com.student.services;
 import java.util.List;
 import java.util.NoSuchElementException;
 
-import javax.transaction.Transactional;
 
 import org.springframework.stereotype.Service;
 
@@ -11,6 +10,8 @@ import org.springframework.stereotype.Service;
 
 import com.student.model.Student;
 import com.student.repositories.StudentRepository;
+
+import jakarta.transaction.Transactional;
 
 @Service
 public class StudentServiceImpl implements StudentService {
@@ -20,6 +21,7 @@ public class StudentServiceImpl implements StudentService {
 	public StudentServiceImpl(StudentRepository studentRepository) {
 		this.studentRepository = studentRepository;
 	}
+
 	@Transactional
 	public List<Student> readAllStudents() {
 		return this.studentRepository.findAll();

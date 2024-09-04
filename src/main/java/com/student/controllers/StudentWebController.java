@@ -54,7 +54,7 @@ public class StudentWebController {
 			model.addAttribute(MESSAGE_ATTRIBUTE, "");
 		}
 
-		return "edit";
+		return EDIT;
 	}
 
 	@GetMapping("/new")

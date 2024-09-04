@@ -3,12 +3,14 @@ package com.student.services;
 import java.util.List;
 import java.util.NoSuchElementException;
 
-import javax.transaction.Transactional;
+
 
 import org.springframework.stereotype.Service;
 
 import com.student.model.Admission;
 import com.student.repositories.AdmissionRepository;
+
+import jakarta.transaction.Transactional;
 
 
 @Service
