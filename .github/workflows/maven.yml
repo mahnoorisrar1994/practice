@@ -56,13 +56,21 @@ jobs:
       run: docker run -d -p 8080:8080 --name student-admission-tdd student-admission-tdd
 
     # Wait for the application to be ready
-    - name: Wait for the application to be ready
+    - name: Wait for the Student and Admission APIs to be ready
       run: |
-        echo "Waiting for the application to be ready..."
-        until curl -s http://localhost:8080/api/admissions/allAdmissions; do
-          echo "Waiting for the application to start..."
-          sleep 10
-        done
+       echo "Waiting for the application to be ready..."
+      
+       # Wait for the Admissions API
+       until curl -s http://localhost:8080/api/admissions/allAdmissions; do
+        echo "Waiting for the Admissions API to start..."
+        sleep 10
+       done
+
+        # Wait for the Students API
+       until curl -s http://localhost:8080/api/students/allStudents; do
+        echo "Waiting for the Students API to start..."
+        sleep 10
+       done
     - name: Unit and Integration Tests
       run: mvn verify -Pjacoco
     - name: Coveralls Report
