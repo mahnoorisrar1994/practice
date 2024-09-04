@@ -60,4 +60,22 @@ public class AdmissionRestControllerE2E {
 				.body("course", equalTo("Masters"));
 	}
 
+	@Test
+	void test_UpdateAdmission() {
+		long admissionId = 1;
+		String updatedAdmissionJson = """
+				{
+				    "admissionDate": "2024-02-11",
+				    "status": "Approved",
+				    "course": "Masters"
+				}
+				""";
+
+		given().contentType(ContentType.JSON).body(updatedAdmissionJson).when()
+				.put("/api/admissions/updateAdmission/{id}", admissionId).then().statusCode(200)
+				.contentType(ContentType.JSON).body("id", equalTo((int) admissionId))
+				.body("admissionDate", equalTo("2024-02-11")).body("status", equalTo("Approved"))
+				.body("course", equalTo("Masters")); // Ensure that updated fields match the expected values
+	}
+
 }
