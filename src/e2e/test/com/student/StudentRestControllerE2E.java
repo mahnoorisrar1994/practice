@@ -1,10 +1,10 @@
 package com.student;
 
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
 
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
+import io.restassured.response.Response;
 
 import org.junit.jupiter.api.Test;
 
@@ -13,24 +13,14 @@ import static org.hamcrest.Matchers.*;
 
 public class StudentRestControllerE2E {
 
+	private static final String BASE_URI = "http://localhost";
+	private static final int PORT = 8080;
+	private static final String STUDENT_ENDPOINT = "/api/students";
+
 	@BeforeAll
 	public static void setup() {
-		RestAssured.baseURI = "http://localhost";
-		RestAssured.port = 8080;
-	}
-
-	@BeforeEach
-	void setupTestData() {
-		String newAdmissionJson = """
-				{
-				    "admissionDate": "2024-02-20",
-				    "status": "Approved",
-				    "course": "Masters"
-				}
-				""";
-
-		given().contentType(ContentType.JSON).body(newAdmissionJson).when().post("/api/admissions/newAdmission").then()
-				.statusCode(200);
+		RestAssured.baseURI = BASE_URI;
+		RestAssured.port = PORT;
 	}
 
 	@Test
@@ -48,19 +38,29 @@ public class StudentRestControllerE2E {
 				}
 				""";
 
-		given().contentType(ContentType.JSON).body(newStudentJson).when().post("/api/students/newStudent").then()
-				.statusCode(200).contentType(ContentType.JSON).body("firstName", equalTo("Hamza"))
-				.body("lastName", equalTo("Khan")).body("email", equalTo("Hamzakhan@gmail.com"))
-				.body("admission.admissionDate", equalTo("2024-02-20")).body("admission.status", equalTo("Approved"))
-				.body("admission.course", equalTo("Masters"));
+		Response response = given().contentType(ContentType.JSON).body(newStudentJson).when()
+				.post(STUDENT_ENDPOINT + "/newStudent");
 
-		long studentId = 1;
-		given().accept(ContentType.JSON).when().get("/api/students/{id}", studentId).then().statusCode(200)
+		System.out.println("Response: " + response.asString());
+
+		int studentId = response.then().statusCode(200).contentType(ContentType.JSON)
 				.body("firstName", equalTo("Hamza")).body("lastName", equalTo("Khan"))
 				.body("email", equalTo("Hamzakhan@gmail.com")).body("admission.admissionDate", equalTo("2024-02-20"))
-				.body("admission.status", equalTo("Approved")).body("admission.course", equalTo("Masters"));
+				.body("admission.status", equalTo("Approved")).body("admission.course", equalTo("Masters")).extract()
+				.path("id"); 
+
+		System.out.println("Created Student ID: " + studentId);
 	}
 
+	@Test
+	void test_DeleteStudent() {
+		long studentId = 3;
 
+		deleteAdmission(studentId).then().statusCode(204);
+	}
+
+	private io.restassured.response.Response deleteAdmission(long studentId) {
+		return given().when().delete(STUDENT_ENDPOINT + "/deleteStudent/{id}", studentId);
+	}
 
 }

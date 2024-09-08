@@ -2,7 +2,6 @@ package com.student;
 
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
-
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -12,10 +11,14 @@ import static org.hamcrest.Matchers.*;
 
 public class AdmissionRestControllerE2E {
 
+	private static final String BASE_URI = "http://localhost";
+	private static final int PORT = 8080;
+	private static final String ADMISSION_ENDPOINT = "/api/admissions";
+
 	@BeforeAll
 	public static void setup() {
-		RestAssured.baseURI = "http://localhost";
-		RestAssured.port = 8080;
+		RestAssured.baseURI = BASE_URI;
+		RestAssured.port = PORT;
 	}
 
 	@BeforeEach
@@ -29,17 +32,24 @@ public class AdmissionRestControllerE2E {
 				}
 				""";
 
-		given().contentType(ContentType.JSON).body(newAdmissionJson).when().post("/api/admissions/newAdmission").then()
-				.statusCode(200);
+		createAdmission(newAdmissionJson).then().statusCode(200);
+	}
+
+	private io.restassured.response.Response createAdmission(String admissionJson) {
+		return given().contentType(ContentType.JSON).body(admissionJson).when()
+				.post(ADMISSION_ENDPOINT + "/newAdmission");
 	}
 
 	@Test
 	void test_GetAdmissionById() {
-		long admissionId = 1;
-		given().accept(ContentType.JSON).when().get("/api/admissions/{id}", admissionId).then().statusCode(200)
-				.contentType(ContentType.JSON).body("id", equalTo((int) admissionId))
-				.body("admissionDate", notNullValue()).body("status", notNullValue()).body("course", notNullValue());
+		long admissionId = 4;
+		getAdmissionById(admissionId).then().log().all().statusCode(200).contentType(ContentType.JSON)
+				.body("id", equalTo((int) admissionId)).body("admissionDate", notNullValue())
+				.body("status", notNullValue()).body("course", notNullValue());
+	}
 
+	private io.restassured.response.Response getAdmissionById(long admissionId) {
+		return given().accept(ContentType.JSON).when().get(ADMISSION_ENDPOINT + "/{id}", admissionId);
 	}
 
 	@Test
@@ -52,17 +62,14 @@ public class AdmissionRestControllerE2E {
 				}
 				""";
 
-		given().contentType(ContentType.JSON).body(newAdmissionJson).when().post("/api/admissions/newAdmission").then()
-				.statusCode(200) // Check if HTTP status code is 200
-				.contentType(ContentType.JSON) // Verify the response content type
-				.body("id", notNullValue()) // Verify that a new id is returned
-				.body("admissionDate", equalTo("2024-02-11")).body("status", equalTo("Approved"))
-				.body("course", equalTo("Masters"));
+		createAdmission(newAdmissionJson).then().statusCode(200).contentType(ContentType.JSON)
+				.body("id", notNullValue()).body("admissionDate", equalTo("2024-02-11"))
+				.body("status", equalTo("Approved")).body("course", equalTo("Masters"));
 	}
 
 	@Test
 	void test_UpdateAdmission() {
-		long admissionId = 1;
+		long admissionId = 9;
 		String updatedAdmissionJson = """
 				{
 				    "admissionDate": "2024-02-11",
@@ -71,11 +78,24 @@ public class AdmissionRestControllerE2E {
 				}
 				""";
 
-		given().contentType(ContentType.JSON).body(updatedAdmissionJson).when()
-				.put("/api/admissions/updateAdmission/{id}", admissionId).then().statusCode(200)
-				.contentType(ContentType.JSON).body("id", equalTo((int) admissionId))
-				.body("admissionDate", equalTo("2024-02-11")).body("status", equalTo("Approved"))
-				.body("course", equalTo("Masters")); // Ensure that updated fields match the expected values
+		updateAdmission(admissionId, updatedAdmissionJson).then().statusCode(200).contentType(ContentType.JSON)
+				.body("id", equalTo((int) admissionId)).body("admissionDate", equalTo("2024-02-11"))
+				.body("status", equalTo("Approved")).body("course", equalTo("Masters"));
 	}
 
+	private io.restassured.response.Response updateAdmission(long admissionId, String updatedAdmissionJson) {
+		return given().contentType(ContentType.JSON).body(updatedAdmissionJson).when()
+				.put(ADMISSION_ENDPOINT + "/updateAdmission/{id}", admissionId);
+	}
+
+	@Test
+	void test_DeleteAdmission() {
+		long admissionId = 5;
+
+		deleteAdmission(admissionId).then().statusCode(204);
+	}
+
+	private io.restassured.response.Response deleteAdmission(long admissionId) {
+		return given().when().delete(ADMISSION_ENDPOINT + "/deleteAdmission/{id}", admissionId);
+	}
 }

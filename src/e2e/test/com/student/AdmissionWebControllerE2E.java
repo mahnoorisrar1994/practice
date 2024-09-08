@@ -13,6 +13,7 @@ import org.openqa.selenium.chrome.ChromeDriver;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
 
+
 import org.openqa.selenium.JavascriptExecutor;
 
 class AdmissionWebControllerE2E {
@@ -36,9 +37,9 @@ class AdmissionWebControllerE2E {
 
 	@AfterAll
 	public static void teardown() {
-	    if (driver != null) {
-	        driver.quit();
-	    }
+		if (driver != null) {
+			driver.quit();
+		}
 	}
 
 
@@ -80,8 +81,6 @@ class AdmissionWebControllerE2E {
 
 		driver.findElement(By.cssSelector("a[href*='/deleteAdmission/']")).click();
 	}
-	
-	
 
 	@Test
 	void test_EditAdmission() {
@@ -104,7 +103,6 @@ class AdmissionWebControllerE2E {
 
 		driver.get(baseUrl + "/editAdmission/" + admissionId);
 
-		
 		WebElement editDateField = driver.findElement(By.name("admissionDate"));
 		jsExecutor.executeScript("arguments[0].value='2024-03-01';", editDateField);
 
