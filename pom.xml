@@ -351,7 +351,7 @@
 		<profile>
 			<id>e2e-tests</id>
 			<activation>
-				<activeByDefault>true</activeByDefault>
+				<activeByDefault>false</activeByDefault>
 			</activation>
 			<properties>
 				<skip.unit-tests>true</skip.unit-tests>
