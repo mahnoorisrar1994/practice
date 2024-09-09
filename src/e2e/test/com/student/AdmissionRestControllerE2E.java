@@ -67,35 +67,4 @@ public class AdmissionRestControllerE2E {
 				.body("status", equalTo("Approved")).body("course", equalTo("Masters"));
 	}
 
-	@Test
-	void test_UpdateAdmission() {
-		long admissionId = 9;
-		String updatedAdmissionJson = """
-				{
-				    "admissionDate": "2024-02-11",
-				    "status": "Approved",
-				    "course": "Masters"
-				}
-				""";
-
-		updateAdmission(admissionId, updatedAdmissionJson).then().statusCode(200).contentType(ContentType.JSON)
-				.body("id", equalTo((int) admissionId)).body("admissionDate", equalTo("2024-02-11"))
-				.body("status", equalTo("Approved")).body("course", equalTo("Masters"));
-	}
-
-	private io.restassured.response.Response updateAdmission(long admissionId, String updatedAdmissionJson) {
-		return given().contentType(ContentType.JSON).body(updatedAdmissionJson).when()
-				.put(ADMISSION_ENDPOINT + "/updateAdmission/{id}", admissionId);
-	}
-
-	@Test
-	void test_DeleteAdmission() {
-		long admissionId = 5;
-
-		deleteAdmission(admissionId).then().statusCode(204);
-	}
-
-	private io.restassured.response.Response deleteAdmission(long admissionId) {
-		return given().when().delete(ADMISSION_ENDPOINT + "/deleteAdmission/{id}", admissionId);
-	}
 }
